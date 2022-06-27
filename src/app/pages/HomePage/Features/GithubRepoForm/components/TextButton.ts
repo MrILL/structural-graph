@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components/macro'
 
 export const TextButton = styled.button`
   background: none;
@@ -17,4 +17,4 @@ export const TextButton = styled.button`
   &:active {
     opacity: 0.4;
   }
-`;
+`

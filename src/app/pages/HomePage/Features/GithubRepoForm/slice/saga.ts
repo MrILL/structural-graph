@@ -1,38 +1,38 @@
-import { call, put, select, takeLatest, delay } from 'redux-saga/effects';
-import { request } from 'utils/request';
-import { selectUsername } from './selectors';
-import { githubRepoFormActions as actions } from '.';
-import { Repo } from 'types/Repo';
-import { RepoErrorType } from './types';
+import { call, put, select, takeLatest, delay } from 'redux-saga/effects'
+import { request } from 'utils/request'
+import { selectUsername } from './selectors'
+import { githubRepoFormActions as actions } from '.'
+import { Repo } from 'types/Repo'
+import { RepoErrorType } from './types'
 
 /**
  * Github repos request/response handler
  */
 export function* getRepos() {
-  yield delay(500);
+  yield delay(500)
   // Select username from store
-  const username: string = yield select(selectUsername);
+  const username: string = yield select(selectUsername)
   if (username.length === 0) {
-    yield put(actions.repoError(RepoErrorType.USERNAME_EMPTY));
-    return;
+    yield put(actions.repoError(RepoErrorType.USERNAME_EMPTY))
+    return
   }
-  const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`;
+  const requestURL = `https://api.github.com/users/${username}/repos?type=all&sort=updated`
 
   try {
     // Call our request helper (see 'utils/request')
-    const repos: Repo[] = yield call(request, requestURL);
+    const repos: Repo[] = yield call(request, requestURL)
     if (repos?.length > 0) {
-      yield put(actions.reposLoaded(repos));
+      yield put(actions.reposLoaded(repos))
     } else {
-      yield put(actions.repoError(RepoErrorType.USER_HAS_NO_REPO));
+      yield put(actions.repoError(RepoErrorType.USER_HAS_NO_REPO))
     }
   } catch (err: any) {
     if (err.response?.status === 404) {
-      yield put(actions.repoError(RepoErrorType.USER_NOT_FOUND));
+      yield put(actions.repoError(RepoErrorType.USER_NOT_FOUND))
     } else if (err.message === 'Failed to fetch') {
-      yield put(actions.repoError(RepoErrorType.GITHUB_RATE_LIMIT));
+      yield put(actions.repoError(RepoErrorType.GITHUB_RATE_LIMIT))
     } else {
-      yield put(actions.repoError(RepoErrorType.RESPONSE_ERROR));
+      yield put(actions.repoError(RepoErrorType.RESPONSE_ERROR))
     }
   }
 }
@@ -45,5 +45,5 @@ export function* githubRepoFormSaga() {
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
   // It will be cancelled automatically on component unmount
-  yield takeLatest(actions.loadRepos.type, getRepos);
+  yield takeLatest(actions.loadRepos.type, getRepos)
 }

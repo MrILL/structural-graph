@@ -1,5 +1,5 @@
-import { translations } from 'locales/translations';
-import { _t } from 'utils/messages';
+import { translations } from 'locales/translations'
+import { _t } from 'utils/messages'
 
 export const messages = {
   selectLanguage: () =>
@@ -7,4 +7,4 @@ export const messages = {
       translations.i18nFeature.selectLanguage,
       'Select Language', // default value
     ),
-};
+}

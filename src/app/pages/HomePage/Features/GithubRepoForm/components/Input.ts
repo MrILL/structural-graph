@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components/macro'
 
 export const Input = styled.input`
   border: 2px solid ${p => p.theme.border};
@@ -30,4 +30,4 @@ export const Input = styled.input`
           'rgba$1,0.2)',
         )};
   }
-`;
+`

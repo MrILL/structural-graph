@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { render } from '@testing-library/react';
-import { Nav } from '../Nav';
-import { MemoryRouter } from 'react-router-dom';
+import * as React from 'react'
+import { render } from '@testing-library/react'
+import { Nav } from '../Nav'
+import { MemoryRouter } from 'react-router-dom'
 
 describe('<Nav />', () => {
   it('should match the snapshot', () => {
@@ -9,7 +9,7 @@ describe('<Nav />', () => {
       <MemoryRouter>
         <Nav />
       </MemoryRouter>,
-    );
-    expect(logo.container.firstChild).toMatchSnapshot();
-  });
-});
+    )
+    expect(logo.container.firstChild).toMatchSnapshot()
+  })
+})

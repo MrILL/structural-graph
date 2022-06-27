@@ -1,53 +1,53 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components/macro';
-import { useSelector, useDispatch } from 'react-redux';
-import { FormLabel } from 'app/components/FormLabel';
-import { Input } from './components/Input';
-import { RepoItem } from './RepoItem';
-import { TextButton } from './components/TextButton';
+import React, { useEffect } from 'react'
+import styled from 'styled-components/macro'
+import { useSelector, useDispatch } from 'react-redux'
+import { FormLabel } from 'app/components/FormLabel'
+import { Input } from './components/Input'
+import { RepoItem } from './RepoItem'
+import { TextButton } from './components/TextButton'
 import {
   selectUsername,
   selectRepos,
   selectLoading,
   selectError,
-} from './slice/selectors';
-import { LoadingIndicator } from 'app/components/LoadingIndicator';
-import { RepoErrorType } from './slice/types';
-import { useGithubRepoFormSlice } from './slice';
+} from './slice/selectors'
+import { LoadingIndicator } from 'app/components/LoadingIndicator'
+import { RepoErrorType } from './slice/types'
+import { useGithubRepoFormSlice } from './slice'
 
 export function GithubRepoForm() {
-  const { actions } = useGithubRepoFormSlice();
+  const { actions } = useGithubRepoFormSlice()
 
-  const username = useSelector(selectUsername);
-  const repos = useSelector(selectRepos);
-  const isLoading = useSelector(selectLoading);
-  const error = useSelector(selectError);
+  const username = useSelector(selectUsername)
+  const repos = useSelector(selectRepos)
+  const isLoading = useSelector(selectLoading)
+  const error = useSelector(selectError)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const onChangeUsername = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(actions.changeUsername(evt.currentTarget.value));
-    dispatch(actions.loadRepos());
-  };
+    dispatch(actions.changeUsername(evt.currentTarget.value))
+    dispatch(actions.loadRepos())
+  }
 
   const useEffectOnMount = (effect: React.EffectCallback) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(effect, []);
-  };
+    useEffect(effect, [])
+  }
 
   useEffectOnMount(() => {
     // When initial state username is not null, submit the form to load repos
     if (username && username.trim().length > 0) {
-      dispatch(actions.loadRepos());
+      dispatch(actions.loadRepos())
     }
-  });
+  })
 
   const onSubmitForm = (evt?: React.FormEvent<HTMLFormElement>) => {
     /* istanbul ignore next  */
     if (evt !== undefined && evt.preventDefault) {
-      evt.preventDefault();
+      evt.preventDefault()
     }
-  };
+  }
 
   return (
     <Wrapper>
@@ -78,30 +78,30 @@ export function GithubRepoForm() {
         <ErrorText>{repoErrorText(error)}</ErrorText>
       ) : null}
     </Wrapper>
-  );
+  )
 }
 
 export const repoErrorText = (error: RepoErrorType) => {
   switch (error) {
     case RepoErrorType.USER_NOT_FOUND:
-      return 'There is no such user 😞';
+      return 'There is no such user 😞'
     case RepoErrorType.USERNAME_EMPTY:
-      return 'Type any Github username';
+      return 'Type any Github username'
     case RepoErrorType.USER_HAS_NO_REPO:
-      return 'User has no repository 🥺';
+      return 'User has no repository 🥺'
     case RepoErrorType.GITHUB_RATE_LIMIT:
-      return 'Looks like github api`s rate limit(60 request/h) has exceeded 🤔';
+      return 'Looks like github api`s rate limit(60 request/h) has exceeded 🤔'
     default:
-      return 'An error has occurred!';
+      return 'An error has occurred!'
   }
-};
+}
 
 const Wrapper = styled.div`
   ${TextButton} {
     margin: 16px 0;
     font-size: 0.875rem;
   }
-`;
+`
 
 const InputWrapper = styled.div`
   display: flex;
@@ -111,11 +111,11 @@ const InputWrapper = styled.div`
     width: ${100 / 3}%;
     margin-right: 0.5rem;
   }
-`;
+`
 
 const ErrorText = styled.span`
   color: ${p => p.theme.text};
-`;
+`
 
 const FormGroup = styled.form`
   display: flex;
@@ -126,6 +126,6 @@ const FormGroup = styled.form`
     margin-bottom: 0.25rem;
     margin-left: 0.125rem;
   }
-`;
+`
 
-const List = styled.div``;
+const List = styled.div``

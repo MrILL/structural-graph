@@ -1,18 +1,20 @@
-import { createGlobalStyle } from 'styled-components';
-import { StyleConstants } from './StyleConstants';
+import { createGlobalStyle } from 'styled-components'
+import { StyleConstants } from './StyleConstants'
 /* istanbul ignore next */
 export const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
   html,
   body {
     height: 100%;
     width: 100%;
-    line-height: 1.5;
   }
 
   body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    padding-top: ${StyleConstants.NAV_BAR_HEIGHT};
-    background-color: ${p => p.theme.background};
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
   }
 
   body.fontLoaded {
@@ -33,4 +35,4 @@ export const GlobalStyle = createGlobalStyle`
     width: 1.5rem;
     height: 1.5rem;
   }
-`;
+`

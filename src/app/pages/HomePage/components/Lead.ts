@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components/macro'
 
 export const Lead = styled.p`
   font-size: 1.5rem;
@@ -10,4 +10,4 @@ export const Lead = styled.p`
   strong {
     color: ${p => p.theme.text};
   }
-`;
+`

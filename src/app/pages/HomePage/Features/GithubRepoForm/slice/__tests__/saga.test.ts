@@ -1,38 +1,38 @@
-import { put, takeLatest } from 'redux-saga/effects';
-import * as slice from '..';
+import { put, takeLatest } from 'redux-saga/effects'
+import * as slice from '..'
 
-import { githubRepoFormSaga, getRepos } from '../saga';
-import { RepoErrorType } from '../types';
+import { githubRepoFormSaga, getRepos } from '../saga'
+import { RepoErrorType } from '../types'
 
 describe('getRepos Saga', () => {
-  let username: any;
-  let repos: any;
-  let getReposIterator: ReturnType<typeof getRepos>;
+  let username: any
+  let repos: any
+  let getReposIterator: ReturnType<typeof getRepos>
 
   // We have to test twice, once for a successful load and once for an unsuccessful one
   // so we do all the stuff that happens beforehand automatically in the beforeEach
   beforeEach(() => {
-    getReposIterator = getRepos();
-    const delayDescriptor = getReposIterator.next().value;
-    expect(delayDescriptor).toMatchSnapshot();
+    getReposIterator = getRepos()
+    const delayDescriptor = getReposIterator.next().value
+    expect(delayDescriptor).toMatchSnapshot()
 
-    const selectDescriptor = getReposIterator.next().value;
-    expect(selectDescriptor).toMatchSnapshot();
-  });
+    const selectDescriptor = getReposIterator.next().value
+    expect(selectDescriptor).toMatchSnapshot()
+  })
 
   it('should return error if username is empty', () => {
-    username = '';
-    const putDescriptor = getReposIterator.next(username).value;
+    username = ''
+    const putDescriptor = getReposIterator.next(username).value
     expect(putDescriptor).toEqual(
       put(slice.githubRepoFormActions.repoError(RepoErrorType.USERNAME_EMPTY)),
-    );
+    )
 
-    const iteration = getReposIterator.next();
-    expect(iteration.done).toBe(true);
-  });
+    const iteration = getReposIterator.next()
+    expect(iteration.done).toBe(true)
+  })
 
   it('should dispatch the reposLoaded action if it requests the data successfully', () => {
-    username = 'test';
+    username = 'test'
     repos = [
       {
         name: 'repo1',
@@ -40,79 +40,79 @@ describe('getRepos Saga', () => {
           login: 'username1',
         },
       },
-    ];
+    ]
 
-    const requestDescriptor = getReposIterator.next(username).value;
-    expect(requestDescriptor).toMatchSnapshot();
+    const requestDescriptor = getReposIterator.next(username).value
+    expect(requestDescriptor).toMatchSnapshot()
 
-    const putDescriptor = getReposIterator.next(repos).value;
+    const putDescriptor = getReposIterator.next(repos).value
     expect(putDescriptor).toEqual(
       put(slice.githubRepoFormActions.reposLoaded(repos)),
-    );
-  });
+    )
+  })
 
   it('should dispatch the user not found error', () => {
-    username = 'test';
+    username = 'test'
 
-    const requestDescriptor = getReposIterator.next(username).value;
-    expect(requestDescriptor).toMatchSnapshot();
+    const requestDescriptor = getReposIterator.next(username).value
+    expect(requestDescriptor).toMatchSnapshot()
 
     const putDescriptor = getReposIterator.throw({
       response: { status: 404 },
-    }).value;
+    }).value
     expect(putDescriptor).toEqual(
       put(slice.githubRepoFormActions.repoError(RepoErrorType.USER_NOT_FOUND)),
-    );
-  });
+    )
+  })
   it('should dispatch the user has no repo error', () => {
-    username = 'test';
-    repos = [];
+    username = 'test'
+    repos = []
 
-    const requestDescriptor = getReposIterator.next(username).value;
-    expect(requestDescriptor).toMatchSnapshot();
+    const requestDescriptor = getReposIterator.next(username).value
+    expect(requestDescriptor).toMatchSnapshot()
 
-    const putDescriptor = getReposIterator.next(repos).value;
+    const putDescriptor = getReposIterator.next(repos).value
     expect(putDescriptor).toEqual(
       put(
         slice.githubRepoFormActions.repoError(RepoErrorType.USER_HAS_NO_REPO),
       ),
-    );
-  });
+    )
+  })
   it('should dispatch the github rate limit error', () => {
-    username = 'test';
+    username = 'test'
 
-    const requestDescriptor = getReposIterator.next(username).value;
-    expect(requestDescriptor).toMatchSnapshot();
+    const requestDescriptor = getReposIterator.next(username).value
+    expect(requestDescriptor).toMatchSnapshot()
 
     const putDescriptor = getReposIterator.throw(
       new Error('Failed to fetch'),
-    ).value;
+    ).value
     expect(putDescriptor).toEqual(
       put(
         slice.githubRepoFormActions.repoError(RepoErrorType.GITHUB_RATE_LIMIT),
       ),
-    );
-  });
+    )
+  })
 
   it('should dispatch the response error', () => {
-    username = 'test';
+    username = 'test'
 
-    const requestDescriptor = getReposIterator.next(username).value;
-    expect(requestDescriptor).toMatchSnapshot();
+    const requestDescriptor = getReposIterator.next(username).value
+    expect(requestDescriptor).toMatchSnapshot()
 
-    const putDescriptor = getReposIterator.throw(new Error('some error')).value;
+    const putDescriptor = getReposIterator.throw(new Error('some error')).value
     expect(putDescriptor).toEqual(
       put(slice.githubRepoFormActions.repoError(RepoErrorType.RESPONSE_ERROR)),
-    );
-  });
-});
+    )
+  })
+})
 
 describe('githubRepoFormSaga Saga', () => {
-  const githubRepoFormIterator = githubRepoFormSaga();
+  const githubRepoFormIterator = githubRepoFormSaga()
   it('should start task to watch for loadRepos action', () => {
-    const takeLatestDescriptor = githubRepoFormIterator.next().value;
+    const takeLatestDescriptor = githubRepoFormIterator.next().value
     expect(takeLatestDescriptor).toEqual(
       takeLatest(slice.githubRepoFormActions.loadRepos.type, getRepos),
-    );
-  });
-});
+    )
+  })
+})

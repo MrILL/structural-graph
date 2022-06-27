@@ -4,8 +4,8 @@
  * Check the documentation section i18n for details
  */
 
-import { translations } from 'locales/translations';
-import { _t } from 'utils/messages';
+import { translations } from 'locales/translations'
+import { _t } from 'utils/messages'
 
 export const messages = {
   routingTitle: () =>
@@ -20,4 +20,4 @@ export const messages = {
   scaffoldingDescription: () => _t(translations.scaffoldingFeature.description),
   i18nTitle: () => _t(translations.i18nFeature.title),
   i18nDescription: () => _t(translations.i18nFeature.description),
-};
+}

@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled from 'styled-components/macro'
 
 export const FormLabel = styled.label`
   text-transform: uppercase;
@@ -7,4 +7,4 @@ export const FormLabel = styled.label`
   padding: 0;
   color: ${p => p.theme.textSecondary};
   font-size: 0.75rem;
-`;
+`

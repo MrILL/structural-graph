@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { FormLabel } from 'app/components/FormLabel';
-import { Radio } from 'app/components/Radio';
-import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { messages } from './messages';
+import * as React from 'react'
+import { FormLabel } from 'app/components/FormLabel'
+import { Radio } from 'app/components/Radio'
+import styled from 'styled-components/macro'
+import { useTranslation } from 'react-i18next'
+import { messages } from './messages'
 
 export function LanguageSwitch() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation()
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const language = event.target.value;
-    i18n.changeLanguage(language);
-  };
+    const language = event.target.value
+    i18n.changeLanguage(language)
+  }
 
   return (
     <Wrapper>
@@ -36,7 +36,7 @@ export function LanguageSwitch() {
         />
       </Languages>
     </Wrapper>
-  );
+  )
 }
 
 const Wrapper = styled.div`
@@ -45,11 +45,11 @@ const Wrapper = styled.div`
   ${FormLabel} {
     margin-bottom: 0.625rem;
   }
-`;
+`
 const Languages = styled.div`
   display: flex;
 
   .radio {
     margin-right: 1.5rem;
   }
-`;
+`

@@ -1,11 +1,14 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { ReactComponent as DocumentationIcon } from './assets/documentation-icon.svg';
-import { ReactComponent as GithubIcon } from './assets/github-icon.svg';
+import * as React from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components/macro'
+import { ReactComponent as DocumentationIcon } from './assets/documentation-icon.svg'
+import { ReactComponent as GithubIcon } from './assets/github-icon.svg'
 
 export function Nav() {
   return (
     <Wrapper>
+      <Link to="/">Home</Link>
+      <Link to="/graph">Graph</Link>
       <Item
         href="https://cansahin.gitbook.io/react-boilerplate-cra-template/"
         target="_blank"
@@ -25,13 +28,13 @@ export function Nav() {
         Github
       </Item>
     </Wrapper>
-  );
+  )
 }
 
 const Wrapper = styled.nav`
   display: flex;
   margin-right: -1rem;
-`;
+`
 
 const Item = styled.a`
   color: ${p => p.theme.primary};
@@ -54,4 +57,4 @@ const Item = styled.a`
   .icon {
     margin-right: 0.25rem;
   }
-`;
+`

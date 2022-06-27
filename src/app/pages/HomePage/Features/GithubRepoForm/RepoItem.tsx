@@ -1,13 +1,13 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { ReactComponent as StarIcon } from './assets/star.svg';
-import { ReactComponent as NewWindowIcon } from './assets/new-window.svg';
-import { A } from 'app/components/A';
+import * as React from 'react'
+import styled from 'styled-components/macro'
+import { ReactComponent as StarIcon } from './assets/star.svg'
+import { ReactComponent as NewWindowIcon } from './assets/new-window.svg'
+import { A } from 'app/components/A'
 
 interface Props {
-  name: string;
-  starCount: number;
-  url: string;
+  name: string
+  starCount: number
+  url: string
 }
 
 export function RepoItem({ name, starCount, url }: Props) {
@@ -24,7 +24,7 @@ export function RepoItem({ name, starCount, url }: Props) {
         </A>
       </Info>
     </Wrapper>
-  );
+  )
 }
 
 const Wrapper = styled.div`
@@ -38,16 +38,16 @@ const Wrapper = styled.div`
   &:nth-child(odd) {
     background-color: ${p => p.theme.backgroundVariant};
   }
-`;
+`
 
 const Name = styled.div`
   flex: 1;
   padding: 0.625rem 0;
-`;
+`
 
 const Info = styled.div`
   display: flex;
-`;
+`
 
 const StarCount = styled.div`
   display: flex;
@@ -56,4 +56,4 @@ const StarCount = styled.div`
   .icon {
     margin-right: 0.125rem;
   }
-`;
+`

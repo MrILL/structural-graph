@@ -1,9 +1,9 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { Logos } from './Logos';
-import { Title } from './components/Title';
-import { Lead } from './components/Lead';
-import { A } from 'app/components/A';
+import * as React from 'react'
+import styled from 'styled-components/macro'
+import { Logos } from './Logos'
+import { Title } from './components/Title'
+import { Lead } from './components/Lead'
+import { A } from 'app/components/A'
 
 export function Masthead() {
   return (
@@ -30,7 +30,7 @@ export function Masthead() {
         template.
       </Lead>
     </Wrapper>
-  );
+  )
 }
 
 const Wrapper = styled.main`
@@ -40,4 +40,4 @@ const Wrapper = styled.main`
   align-items: center;
   justify-content: center;
   min-height: 320px;
-`;
+`

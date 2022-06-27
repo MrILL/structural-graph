@@ -1,10 +1,10 @@
-import * as React from 'react';
-import styled from 'styled-components/macro';
-import { P } from './P';
-import { Link } from 'app/components/Link';
-import { NavBar } from 'app/components/NavBar';
-import { Helmet } from 'react-helmet-async';
-import { StyleConstants } from 'styles/StyleConstants';
+import * as React from 'react'
+import styled from 'styled-components/macro'
+import { P } from './P'
+import { Link } from 'app/components/Link'
+import { NavBar } from 'app/components/NavBar'
+import { Helmet } from 'react-helmet-async'
+import { StyleConstants } from 'styles/StyleConstants'
 
 export function NotFoundPage() {
   return (
@@ -26,7 +26,7 @@ export function NotFoundPage() {
         <Link to={process.env.PUBLIC_URL + '/'}>Return to Home Page</Link>
       </Wrapper>
     </>
-  );
+  )
 }
 
 const Wrapper = styled.div`
@@ -36,7 +36,7 @@ const Wrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   min-height: 320px;
-`;
+`
 
 const Title = styled.div`
   margin-top: -8vh;
@@ -47,4 +47,4 @@ const Title = styled.div`
   span {
     font-size: 3.125rem;
   }
-`;
+`

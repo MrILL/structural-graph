@@ -1,16 +1,16 @@
-import React, { memo } from 'react';
-import styled from 'styled-components/macro';
+import React, { memo } from 'react'
+import styled from 'styled-components/macro'
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
->;
+>
 
 interface Props extends InputProps {
-  id: string;
-  label: string;
-  className?: string;
-  isSelected?: boolean;
+  id: string
+  label: string
+  className?: string
+  isSelected?: boolean
 }
 
 export const Radio = memo(
@@ -20,9 +20,9 @@ export const Radio = memo(
         <input type="radio" id={id} checked={isSelected} {...restOf} />
         <label htmlFor={id}>{label}</label>
       </Wrapper>
-    );
+    )
   },
-);
+)
 
 const Wrapper = styled.div`
   input[type='radio'] {
@@ -121,4 +121,4 @@ const Wrapper = styled.div`
       }
     }
   }
-`;
+`
