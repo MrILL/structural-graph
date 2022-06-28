@@ -14,7 +14,7 @@ export type GameEvent = {
   effects?: string
 
   version: string
-  location?: string //link
+  location?: string
   requirements?: string[] //can be text
   activeCharacters?: GameCharacter[]
   prevEventId?: Id

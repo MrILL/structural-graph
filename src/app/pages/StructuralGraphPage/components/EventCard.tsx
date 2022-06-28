@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { GameEvent } from 'types'
 
-export function EvenCard({ data }: { data: GameEvent }) {
+export function EventCard({ data }: { data: GameEvent }) {
   return (
     <Wrapper>
       <Image src={data.imgUrl} alt="new" />

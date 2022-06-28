@@ -1,16 +1,10 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet-async'
-import {
-  Switch,
-  Route,
-  BrowserRouter,
-  Link,
-  withRouter,
-} from 'react-router-dom'
+import { Switch, Route, BrowserRouter, Link } from 'react-router-dom'
 import { GlobalStyle } from '../styles/global-styles'
 
 import { HomePage } from './pages/HomePage/Loadable'
-import { StructuralGraph } from './pages/StructuralGraph'
+import { StructuralGraphPage } from './pages/StructuralGraphPage'
 import { NotFoundPage } from './pages/NotFoundPage/Loadable'
 import { useTranslation } from 'react-i18next'
 
@@ -41,7 +35,7 @@ export function App() {
 
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/graph" component={StructuralGraph} />
+        <Route exact path="/graph" component={StructuralGraphPage} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
