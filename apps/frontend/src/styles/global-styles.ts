@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { StyleConstants } from './StyleConstants'
+
 /* istanbul ignore next */
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
@@ -8,6 +8,7 @@ export const GlobalStyle = createGlobalStyle`
   body {
     // height: 100%;
     width: 100%;
+    margin: 0px;
   }
 
   body {
