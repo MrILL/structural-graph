@@ -4,7 +4,7 @@ import { NavBar } from '../../../components/NavBar'
 import { PageWrapper } from '../../../components/PageWrapper'
 
 import { Masthead } from './Masthead'
-import { Features } from './Features'
+// import { Features } from './Features'
 import { Link } from 'react-router-dom'
 
 export function HomePage() {
@@ -20,7 +20,7 @@ export function HomePage() {
       <NavBar />
       <PageWrapper>
         <Masthead />
-        <Features />
+        {/* <Features /> */}
       </PageWrapper>
     </>
   )

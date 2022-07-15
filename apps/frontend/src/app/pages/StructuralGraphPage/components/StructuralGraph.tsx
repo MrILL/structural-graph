@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ReactFlow from 'react-flow-renderer'
-import { GameEvent } from '../../../../types'
+import { GameEvent, Id } from '@sg/types'
 
 import { EventCard } from './EventCard'
 
@@ -17,7 +17,14 @@ const data: GameEvent[] = [
   },
 ]
 
-const initialNodes = [
+type Node = {
+  id: Id
+  type?: 'input' | 'output' | 'card'
+  data: GameEvent | { [key: string]: any }
+  position: any
+}
+
+const initialNodes: Node[] = [
   {
     id: '1',
     type: 'input',

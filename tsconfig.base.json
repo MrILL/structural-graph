@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "noImplicitAny": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@sg/types": ["libs/shared/types/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

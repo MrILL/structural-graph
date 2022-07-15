@@ -5,16 +5,13 @@
  * code.
  */
 
-import 'react-app-polyfill/ie11'
-import 'react-app-polyfill/stable'
-
 import * as React from 'react'
 import * as ReactDOMClient from 'react-dom/client'
-import { Provider } from 'react-redux'
-import FontFaceObserver from 'fontfaceobserver'
+// import { Provider } from 'react-redux'
+// import FontFaceObserver from 'fontfaceobserver'
 
 // Use consistent styling
-import 'sanitize.css/sanitize.css'
+// import 'sanitize.css/sanitize.css'
 
 import { App } from './app'
 

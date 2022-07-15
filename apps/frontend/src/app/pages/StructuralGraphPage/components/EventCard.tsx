@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { GameEvent } from '../../../../types'
+import { GameEvent } from '@sg/types'
 
 export function EventCard({ data }: { data: GameEvent }) {
   return (
