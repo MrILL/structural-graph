@@ -14,19 +14,26 @@ override NX_NESTJS_DEFAULT_MODULES_PATH = modules
 
 
 
-DEFAULT_SOURCE_ROOT = apps/
+DEFAULT_SOURCE_ROOT = apps
 
-language = ts
-name = 
 app-name = backend
+name = 
+language = ts
+db = mongoose
 
-generate-nest-res:
-	$(NX_NESTJS):resource $(name) \
-	--language=$(language) \
+override _NX_NESTJS_OPTIONS = --language=$(language) \
 	--path=$(NX_NESTJS_DEFAULT_MODULES_PATH) \
 	--sourceRoot=$(DEFAULT_SOURCE_ROOT)/$(app-name)/src \
 	$(DRY_RUN) \
 	$(NO_INTERACTIVE) \
+
+generate-nest-res:
+	$(NX_NESTJS):resource $(name) ${_NX_NESTJS_OPTIONS}
+
+generate-nest-res-custom:
+	nx workspace-generator nest-mrills-resource $(name) \
+	$(_NX_NESTJS_OPTIONS) \
+	--db=$(db)
 
 nx-frontend:
 	nx serve frontend --port=8080
