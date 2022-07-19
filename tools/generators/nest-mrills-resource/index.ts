@@ -11,12 +11,12 @@ const libraryGenerator = wrapAngularDevkitSchematic(
 )
 
 export default async function (tree: Tree, schema: ResourceOptions) {
-  console.log(schema)
+  // console.log(schema)
   await libraryGenerator(tree, schema)
 
   const options = transform(schema)
 
-  console.log(`Db handler: ${options.db}`)
+  // console.log(`Db handler: ${options.db}`)
   const dbHandler: Handler = dbHandlers[options.db as string] as Handler
   await dbHandler(tree, options)
 

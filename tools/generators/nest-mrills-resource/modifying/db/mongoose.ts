@@ -41,6 +41,4 @@ export async function mongooseHandler(tree: Tree, options: ResourceOptions) {
   // logFile(options.name + '.service.' + options.language)
   // logFile(options.name + '.controller.' + options.language)
   // logFile(options.name + '.module.' + options.language)
-
-  //TODO add dependencies
 }
