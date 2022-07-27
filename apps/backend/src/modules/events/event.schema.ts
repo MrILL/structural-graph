@@ -1,13 +1,27 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
+import { Character } from '../characters/character.schema'
 
-import { GameCharacter, GameEvent, Id } from '@sg/types'
+enum EventRequirementType {
+  Text = 'text',
+  CharacterAffection = 'char_affection',
+  CharacterLust = 'char_lust',
+  Event = 'event',
+}
+
+export class EventRequirement {
+  eventType: EventRequirementType
+
+  characterValue?: number
+
+  eventId?: string
+}
 
 @Schema()
-export class Event implements GameEvent {
-  @Prop({ type: String })
-  id: Id
+export class Event {
+  @Prop()
+  id: string
 
   @Prop({ required: true })
   title: string
@@ -33,19 +47,36 @@ export class Event implements GameEvent {
   version: string
 
   @Prop()
-  location?: string
+  location?: string //or actual location page
 
-  @Prop([String])
-  requirements?: string[] //can be text
+  @Prop(
+    raw({
+      type: [
+        {
+          eventType: {
+            required: true,
+            type: String,
+            enum: EventRequirementType,
+          },
+          characterValue: {
+            type: mongoose.Schema.Types.Number,
+          },
+        },
+      ],
+    }),
+  )
+  requirements?: EventRequirement[] //can be text
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }] })
-  activeCharacters?: GameCharacter[]
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }],
+  })
+  activeCharacter?: Character[]
 
-  @Prop({ type: String })
-  prevEventId?: Id
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
+  prevEvent?: Event
 
-  @Prop({ type: String })
-  nextEventId?: Id
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
+  nextEventId?: Event
 
   ///
 
