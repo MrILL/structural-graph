@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
-import { Character } from '../characters/character.schema'
 
 enum EventRequirementType {
   Text = 'text',
@@ -61,6 +60,10 @@ export class Event {
           characterValue: {
             type: mongoose.Schema.Types.Number,
           },
+          eventId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Event',
+          },
         },
       ],
     }),
@@ -70,13 +73,13 @@ export class Event {
   @Prop({
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }],
   })
-  activeCharacter?: Character[]
+  activeCharacterIds?: string[]
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
-  prevEvent?: Event
+  prevEventId?: string
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
-  nextEventId?: Event
+  nextEventId?: string
 
   ///
 
