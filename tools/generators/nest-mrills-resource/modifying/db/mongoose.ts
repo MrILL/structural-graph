@@ -12,13 +12,15 @@ export async function mongooseHandler(tree: Tree, options: ResourceOptions) {
   const modulePath = path.join(modulesPath, options.name)
 
   const entityFolderPath = path.join(modulePath, 'entities')
-  const entityPath = path.join(
-    entityFolderPath,
-    tree.children(entityFolderPath)[0],
-  )
-  if (tree.exists(entityPath)) {
-    // console.log(`Delete ${entityPath}\n`)
-    tree.delete(entityPath)
+  if (tree.children(entityFolderPath)[0]) {
+    const entityPath = path.join(
+      entityFolderPath,
+      tree.children(entityFolderPath)[0],
+    )
+    if (tree.exists(entityPath)) {
+      // console.log(`Delete ${entityPath}\n`)
+      tree.delete(entityPath)
+    }
   }
 
   generateFiles(
