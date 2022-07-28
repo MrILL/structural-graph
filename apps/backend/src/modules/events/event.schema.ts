@@ -83,7 +83,7 @@ export class Event {
 
   ///
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   wikiUrl: string
 
   @Prop()

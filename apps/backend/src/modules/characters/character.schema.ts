@@ -9,7 +9,7 @@ export class Character implements GameCharacter {
   @Prop({ type: String })
   id: Id
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string
 
   ///
