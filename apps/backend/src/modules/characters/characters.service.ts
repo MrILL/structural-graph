@@ -22,7 +22,7 @@ export class CharactersService {
       .findOne({ name: createCharacterDto.name })
       .exec()
     if (check) {
-      console.log(`Id of already existed result ${check._id}`)
+      console.log(`Character exists with id:${check._id} & name:${check.name}`)
       throw new ConflictException(`Character exists with id:${check._id}`)
     }
 
@@ -73,6 +73,23 @@ export class CharactersService {
     )
 
     return character
+  }
+
+  async removeAll(): Promise<Character[]> {
+    const characters = await this.characterModel.find().exec()
+    if (!characters || !characters.length) {
+      throw new NotFoundException('Characters not found')
+    }
+
+    await Promise.all(
+      characters.map(async character => {
+        await this.remove(character._id)
+      }),
+    )
+
+    console.log(`Deleted ${characters.length} characters`)
+
+    return characters
   }
 
   async remove(characterId: string): Promise<Character> {

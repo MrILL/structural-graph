@@ -48,6 +48,13 @@ export class CharactersController {
     await this.charactersService.update(characterId, updateCharacterDto)
   }
 
+  //TODO TMP
+  @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeAll(): Promise<void> {
+    await this.charactersService.removeAll()
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') characterId: string): Promise<void> {
