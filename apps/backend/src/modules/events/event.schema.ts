@@ -12,7 +12,8 @@ enum EventRequirementType {
 export class EventRequirement {
   eventType: EventRequirementType
 
-  characterValue?: number
+  value?: number
+  characterId: string
 
   eventId?: string
 }
@@ -28,6 +29,8 @@ export class Event {
   @Prop({ required: true })
   type: string //"Every Day I Grow Some More" is a Main Event. //Main Event - is a link
 
+  ///
+
   @Prop({ required: true })
   synopsis: string
 
@@ -40,6 +43,9 @@ export class Event {
   @Prop()
   effects?: string
 
+  @Prop()
+  trivia?: string
+
   ///
 
   @Prop({ required: true })
@@ -48,6 +54,7 @@ export class Event {
   @Prop()
   location?: string //or actual location page
 
+  //TODO replace with reference at separate table
   @Prop(
     raw({
       type: [
@@ -57,8 +64,12 @@ export class Event {
             type: String,
             enum: EventRequirementType,
           },
-          characterValue: {
+          value: {
             type: mongoose.Schema.Types.Number,
+          },
+          characterId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Character',
           },
           eventId: {
             type: mongoose.Schema.Types.ObjectId,

@@ -23,6 +23,13 @@ export class Character implements GameCharacter {
   @Prop({ type: mongoose.Schema.Types.Map, of: String })
   additionalInfo?: Map<string, string>
 
+  //TODO remote image relation
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'RemoteImage"})
+  // remoteImgId?: string
+
+  @Prop()
+  imgUrl?: string
+
   ///
 
   @Prop()
