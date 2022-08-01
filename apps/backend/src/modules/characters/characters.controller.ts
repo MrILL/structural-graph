@@ -8,12 +8,14 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common'
 
 import { CharactersService } from './characters.service'
 import { Character } from './character.schema'
 import { CreateCharacterDto } from './dto/create-character.dto'
 import { UpdateCharacterDto } from './dto/update-character.dto'
+import { GetCharactersQuery } from './dto/get-characters-query.dto'
 
 @Controller('characters')
 export class CharactersController {
@@ -29,8 +31,8 @@ export class CharactersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<Character[]> {
-    return this.charactersService.findAll()
+  async findAll(@Query() queries: GetCharactersQuery): Promise<Character[]> {
+    return this.charactersService.findAll(queries)
   }
 
   @Get(':id')

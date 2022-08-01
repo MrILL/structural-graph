@@ -9,6 +9,7 @@ import { Model } from 'mongoose'
 import { Character, CharacterDocument } from './character.schema'
 import { CreateCharacterDto } from './dto/create-character.dto'
 import { UpdateCharacterDto } from './dto/update-character.dto'
+import { GetCharactersQuery } from './dto/get-characters-query.dto'
 
 @Injectable()
 export class CharactersService {
@@ -34,8 +35,14 @@ export class CharactersService {
     return res
   }
 
-  async findAll(): Promise<Character[]> {
-    const characters = await this.characterModel.find().exec()
+  async findAll(queries: GetCharactersQuery): Promise<Character[]> {
+    const dbQuery = this.characterModel.find()
+
+    if (queries.name) {
+      dbQuery.where('name', queries.name)
+    }
+
+    const characters = await dbQuery.exec()
     if (!characters || !characters.length) {
       throw new NotFoundException('Characters not found')
     }
