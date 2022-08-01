@@ -12,6 +12,9 @@ export class Character implements GameCharacter {
   @Prop({ required: true, unique: true })
   name: string
 
+  @Prop({ required: true, unique: true })
+  wikiUrl: string
+
   ///
 
   @Prop()
