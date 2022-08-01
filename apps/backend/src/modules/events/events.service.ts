@@ -2,11 +2,13 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
-import { Event, EventDocument } from './event.schema'
+import { Event, EventDocument, EventRequirementType } from './event.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
 import { GetEventsQuery } from './dto/get-events-query.dto'
@@ -28,6 +30,50 @@ export class EventsService {
       throw new ConflictException(
         `Scrape result of Event page already exists with id:${check._id}`,
       )
+    }
+
+    if (createEventDto.requirements) {
+      createEventDto.requirements.forEach(requirement => {
+        const { eventType, value, eventId, characterId } = requirement
+        switch (requirement.eventType) {
+          case EventRequirementType.Text:
+            break
+          case EventRequirementType.CharacterLust:
+          case EventRequirementType.CharacterAffection:
+            if (!value || !characterId) {
+              throw new BadRequestException(
+                `Requirements: Empty 'value' || 'characterId' fields for ${eventType} type`,
+              )
+            }
+            if (eventId) {
+              throw new BadRequestException(
+                `Requirements: Not expected 'eventId' field with ${eventType} type`,
+              )
+            }
+            break
+          case EventRequirementType.Event:
+            if (!eventId) {
+              throw new BadRequestException(
+                `Requirements: Empty 'eventId' field for ${eventType} type`,
+              )
+            }
+            if (value) {
+              throw new BadRequestException(
+                `Requirements: Not expected 'value' field with ${eventType} type`,
+              )
+            }
+            if (characterId) {
+              throw new BadRequestException(
+                `Requirements: Not expected 'characterId' field with ${eventType} type`,
+              )
+            }
+            break
+          default:
+            throw new InternalServerErrorException(
+              `Requirements: Not expected event type: ${requirement.eventType}`,
+            )
+        }
+      })
     }
 
     const newEvent = await this.eventModel.create(createEventDto)

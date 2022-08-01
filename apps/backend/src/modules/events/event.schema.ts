@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
 
-enum EventRequirementType {
+export enum EventRequirementType {
   Text = 'text',
   CharacterAffection = 'char_affection',
   CharacterLust = 'char_lust',
@@ -13,7 +13,8 @@ export class EventRequirement {
   eventType: EventRequirementType
 
   value?: number
-  characterId: string
+
+  characterId?: string
 
   eventId?: string
 }
@@ -23,8 +24,11 @@ export class Event {
   @Prop()
   id: string
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   title: string
+
+  @Prop({ required: true, unique: true })
+  wikiUrl: string
 
   @Prop({ required: true })
   type: string //"Every Day I Grow Some More" is a Main Event. //Main Event - is a link
@@ -93,9 +97,6 @@ export class Event {
   nextEventId?: string
 
   ///
-
-  @Prop({ required: true, unique: true })
-  wikiUrl: string
 
   @Prop()
   imgUrl?: string
