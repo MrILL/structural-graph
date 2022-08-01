@@ -8,12 +8,14 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common'
 
 import { EventsService } from './events.service'
 import { Event } from './event.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
+import { GetEventsQuery } from './dto/get-events-query.dto'
 
 @Controller('events')
 export class EventsController {
@@ -27,8 +29,8 @@ export class EventsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<Event[]> {
-    return this.eventsService.findAll()
+  async findAll(@Query() queries: GetEventsQuery): Promise<Event[]> {
+    return this.eventsService.findAll(queries)
   }
 
   @Get(':id')

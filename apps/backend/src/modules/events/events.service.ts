@@ -9,6 +9,7 @@ import { Model } from 'mongoose'
 import { Event, EventDocument } from './event.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
+import { GetEventsQuery } from './dto/get-events-query.dto'
 
 @Injectable()
 export class EventsService {
@@ -37,8 +38,18 @@ export class EventsService {
     return res
   }
 
-  async findAll(): Promise<Event[]> {
-    const events = await this.eventModel.find().exec()
+  async findAll(queries: GetEventsQuery): Promise<Event[]> {
+    const dbQuery = this.eventModel.find()
+
+    if (queries.title) {
+      dbQuery.where('title', queries.title)
+    }
+
+    if (queries.wikiUrl) {
+      dbQuery.where('wikiUrl', queries.wikiUrl)
+    }
+
+    const events = await dbQuery.exec()
     if (!events || !events.length) {
       throw new NotFoundException('Events not found')
     }
