@@ -12,7 +12,7 @@ export enum EventRequirementType {
 export class EventRequirement {
   eventType: EventRequirementType
 
-  value?: number
+  value?: string
 
   characterId?: string
 
@@ -69,7 +69,7 @@ export class Event {
             enum: EventRequirementType,
           },
           value: {
-            type: mongoose.Schema.Types.Number,
+            type: mongoose.Schema.Types.String,
           },
           characterId: {
             type: mongoose.Schema.Types.ObjectId,
