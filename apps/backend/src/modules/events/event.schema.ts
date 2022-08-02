@@ -35,8 +35,8 @@ export class Event {
 
   ///
 
-  @Prop({ required: true })
-  synopsis: string
+  @Prop()
+  synopsis?: string
 
   @Prop()
   choises?: string //Possible html
@@ -49,6 +49,9 @@ export class Event {
 
   @Prop()
   trivia?: string
+
+  @Prop({ type: mongoose.Schema.Types.Map, of: String })
+  manyText?: Map<string, string>
 
   ///
 

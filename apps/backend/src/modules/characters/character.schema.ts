@@ -53,10 +53,10 @@ export class Character implements GameCharacter {
   ///
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
-  firstEvent?: GameEvent
+  firstEventId?: GameEvent
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
-  lastEvent?: GameEvent
+  lastEventId?: GameEvent
 }
 
 export type CharacterDocument = Character & Document

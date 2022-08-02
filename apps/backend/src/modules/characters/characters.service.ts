@@ -42,6 +42,10 @@ export class CharactersService {
       dbQuery.where('name', queries.name)
     }
 
+    if (queries.wikiUrl) {
+      dbQuery.where('wikiUrl', queries.wikiUrl)
+    }
+
     const characters = await dbQuery.exec()
     if (!characters || !characters.length) {
       throw new NotFoundException('Characters not found')
