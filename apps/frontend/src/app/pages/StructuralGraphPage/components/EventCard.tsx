@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { GameEvent } from '@sg/types'
 
 export function EventCard({ data }: { data: GameEvent }) {
@@ -22,6 +23,7 @@ const Wrapper = styled.div`
 
   border-radius: 32px;
   overflow: hidden;
+  font-size: 12px;
 `
 
 const Image = styled.img`

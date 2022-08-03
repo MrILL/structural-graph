@@ -14,8 +14,8 @@ export const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 12px;
-    line-height: 14px;
+    font-size: 16px;
+    // line-height: 20px;
   }
 
   body.fontLoaded {

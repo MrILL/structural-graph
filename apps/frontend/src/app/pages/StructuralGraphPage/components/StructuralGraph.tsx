@@ -1,5 +1,11 @@
 import * as React from 'react'
-import ReactFlow from 'react-flow-renderer'
+import ReactFlow, {
+  applyEdgeChanges,
+  applyNodeChanges,
+  EdgeChange,
+  NodeChange,
+} from 'react-flow-renderer'
+
 import { GameEvent, Id } from '@sg/types'
 
 import { EventCard } from './EventCard'
@@ -17,14 +23,14 @@ const data: GameEvent[] = [
   },
 ]
 
-type Node = {
+type CustomNode = {
   id: Id
   type?: 'input' | 'output' | 'card'
   data: GameEvent | { [key: string]: any }
   position: any
 }
 
-const initialNodes: Node[] = [
+const initialNodes: CustomNode[] = [
   {
     id: '1',
     type: 'input',
@@ -78,6 +84,16 @@ export function StructuralGraph() {
   //   // window.addEventListener('resize', handleResize)
   // })
 
+  const onNodesChange = React.useCallback(
+    (changes: NodeChange[]) =>
+      setNodes(nds => applyNodeChanges(changes, nds as any) as any),
+    [setNodes],
+  )
+  const onEdgesChange = React.useCallback(
+    (changes: EdgeChange[]) => setEdges(eds => applyEdgeChanges(changes, eds)),
+    [setEdges],
+  )
+
   const nodeTypes = React.useMemo(() => ({ card: EventCard }), [])
 
   // return <div>cock</div>
@@ -86,11 +102,12 @@ export function StructuralGraph() {
       style={{
         backgroundColor: 'pink',
         width: '100%',
-        height: 'calc(100vh - 90px)',
       }}
       nodeTypes={nodeTypes}
       nodes={nodes}
       edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
     />
   )
 }
