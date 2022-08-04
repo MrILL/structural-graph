@@ -63,9 +63,25 @@ const initialEdges = [
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ]
 
-export function StructuralGraph() {
+export function StructuralGraph({ serverEvents }: { serverEvents: any }) {
   const [nodes, setNodes] = React.useState(initialNodes)
   const [edges, setEdges] = React.useState(initialEdges)
+
+  React.useEffect(() => {
+    const newNodes = (serverEvents as GameEvent[]).map(
+      (event: GameEvent, i: number): CustomNode => ({
+        id: (event as any)._id,
+        type: 'card',
+        data: event,
+        position: {
+          x: i * 180,
+          y: 0,
+        },
+      }),
+    )
+
+    setNodes(newNodes)
+  }, [serverEvents])
 
   // const [dimensions, setDimensions] = React.useState({
   //   height: window.innerHeight,
@@ -85,8 +101,10 @@ export function StructuralGraph() {
   // })
 
   const onNodesChange = React.useCallback(
-    (changes: NodeChange[]) =>
-      setNodes(nds => applyNodeChanges(changes, nds as any) as any),
+    (changes: NodeChange[]) => {
+      // console.log(changes)
+      return setNodes(nds => applyNodeChanges(changes, nds as any) as any)
+    },
     [setNodes],
   )
   const onEdgesChange = React.useCallback(

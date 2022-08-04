@@ -1,10 +1,27 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Helmet } from 'react-helmet-async'
+import axios from 'axios'
 
 import { StructuralGraph } from './components/StructuralGraph'
 
 export function StructuralGraphPage() {
+  const [events, setEvents] = React.useState([])
+
+  React.useEffect(() => {
+    // const interval = setInterval(() => {
+    axios
+      .get('http://127.0.0.1:3000/api/events')
+      .then(res => res.data)
+      .then(data => {
+        setEvents(data)
+      })
+      .catch(e => console.log(e))
+    // }, 5000)
+    // return () => clearInterval(interval)
+  }, [])
+  console.log('Page redraw')
+
   return (
     <>
       <Helmet>
@@ -13,7 +30,7 @@ export function StructuralGraphPage() {
       <PageWrapper>
         <Wrapper>
           <DebugDataBlock>cock1 cock2</DebugDataBlock>
-          <StructuralGraph />
+          <StructuralGraph serverEvents={events} />
         </Wrapper>
       </PageWrapper>
     </>
