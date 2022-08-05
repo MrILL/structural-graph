@@ -129,6 +129,23 @@ export class EventsService {
     return event
   }
 
+  async removeAll(): Promise<Event[]> {
+    const events = await this.eventModel.find().exec()
+    if (!events || !events.length) {
+      throw new NotFoundException('Events not found')
+    }
+
+    await Promise.all(
+      events.map(async event => {
+        return this.remove(event._id)
+      }),
+    )
+
+    console.log(`Deleted ${events.length} characters`)
+
+    return events
+  }
+
   async remove(eventId: string): Promise<Event> {
     const event = await this.eventModel.findOne({ _id: eventId }).exec()
     if (!event) {

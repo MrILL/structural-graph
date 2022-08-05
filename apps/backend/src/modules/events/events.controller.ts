@@ -48,6 +48,13 @@ export class EventsController {
     await this.eventsService.update(eventId, updateEventDto)
   }
 
+  //TODO TMP
+  @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async removeAll(): Promise<void> {
+    await this.eventsService.removeAll()
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') eventId: string): Promise<void> {

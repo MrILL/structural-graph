@@ -94,7 +94,7 @@ export class CharactersService {
 
     await Promise.all(
       characters.map(async character => {
-        await this.remove(character._id)
+        return this.remove(character._id)
       }),
     )
 
