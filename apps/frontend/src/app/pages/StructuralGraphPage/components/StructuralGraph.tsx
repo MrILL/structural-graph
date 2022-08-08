@@ -63,24 +63,43 @@ const initialEdges = [
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ]
 
-export function StructuralGraph({ serverEvents }: { serverEvents: any }) {
+export function StructuralGraph({
+  serverEvents,
+}: {
+  serverEvents: GameEvent[]
+}) {
   const [nodes, setNodes] = React.useState(initialNodes)
   const [edges, setEdges] = React.useState(initialEdges)
 
   React.useEffect(() => {
-    const newNodes = (serverEvents as GameEvent[]).map(
-      (event: GameEvent, i: number): CustomNode => ({
-        id: (event as any)._id,
-        type: 'card',
-        data: event,
-        position: {
-          x: i * 180,
-          y: 0,
-        },
-      }),
-    )
+    const versionCollection = {} as { [key: string]: GameEvent[] }
+    serverEvents.forEach(event => {
+      const version = event.version
 
-    setNodes(newNodes)
+      if (!versionCollection[version]) {
+        versionCollection[version] = [event]
+      } else {
+        versionCollection[version].push(event)
+      }
+    })
+
+    const newNodes = Object.entries(versionCollection)
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([_, eventRow], yOffset) => {
+        return eventRow.map((event, xOffset) => ({
+          id: (event as any)._id,
+          type: 'card',
+          data: event,
+          position: {
+            x: xOffset * 280,
+            y: yOffset * 160,
+          },
+        }))
+      })
+      .flat()
+
+    // setNodes([...newNodes, ...nodes] as any)
+    setNodes(newNodes as any)
   }, [serverEvents])
 
   // const [dimensions, setDimensions] = React.useState({
@@ -126,6 +145,7 @@ export function StructuralGraph({ serverEvents }: { serverEvents: any }) {
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      minZoom={0.1}
     />
   )
 }
