@@ -63,6 +63,48 @@ const initialEdges = [
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ]
 
+function sortEvents(
+  event1: [string, GameEvent[]],
+  event2: [string, GameEvent[]],
+): number {
+  const v1 = event1[0]
+  const v2 = event2[0]
+
+  const getReleaseVersion = (str: string) => {
+    const vStrs = str.split('.')
+
+    return vStrs[0] === '' ? 0 : +vStrs[0]
+  }
+
+  const getMainVersion = (str: string) => {
+    if (typeof str !== 'string') return str
+    const vStrs = str.split('.')
+    const vStr = vStrs[1].match(/^([0-9])*/g) as any
+
+    return vStr[0]
+  }
+
+  const getSubVersion = (str: string) => {
+    if (typeof str !== 'string') return str
+    const vStrs = str.split('.')
+
+    return vStrs[1]
+  }
+  const v1Release = getReleaseVersion(v1)
+  const v2Release = getReleaseVersion(v2)
+  if (v1Release !== v2Release) return v1Release - v2Release
+
+  const v1Main = getMainVersion(v1)
+  const v2Main = getMainVersion(v2)
+  if (v1Main !== v2Main) return v1Main - v2Main
+
+  const v1Sub = getSubVersion(v1)
+  const v2Sub = getSubVersion(v2)
+  if (v1Sub !== v2Sub) return v1Sub.localeCompare(v2Sub)
+
+  return 0
+}
+
 export function StructuralGraph({
   serverEvents,
 }: {
@@ -84,7 +126,7 @@ export function StructuralGraph({
     })
 
     const newNodes = Object.entries(versionCollection)
-      .sort((a, b) => a[0].localeCompare(b[0]))
+      .sort(sortEvents)
       .map(([_, eventRow], yOffset) => {
         return eventRow.map((event, xOffset) => ({
           id: (event as any)._id,
