@@ -2,7 +2,9 @@ import * as React from 'react'
 import ReactFlow, {
   applyEdgeChanges,
   applyNodeChanges,
+  Edge,
   EdgeChange,
+  Node,
   NodeChange,
 } from 'react-flow-renderer'
 
@@ -24,11 +26,9 @@ const data: GameEvent[] = [
 ]
 
 type CustomNode = {
-  id: Id
   type?: 'input' | 'output' | 'card'
   data: GameEvent | { [key: string]: any }
-  position: any
-}
+} & Node
 
 const initialNodes: CustomNode[] = [
   {
@@ -58,7 +58,7 @@ const initialNodes: CustomNode[] = [
   },
 ]
 
-const initialEdges = [
+const initialEdges: Edge[] = [
   { id: 'e1-2', source: '1', target: '2' },
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ]
@@ -110,7 +110,7 @@ export function StructuralGraph({
 }: {
   serverEvents: GameEvent[]
 }) {
-  const [nodes, setNodes] = React.useState(initialNodes)
+  const [nodes, setNodes] = React.useState<Node[]>(initialNodes)
   const [edges, setEdges] = React.useState(initialEdges)
 
   React.useEffect(() => {
@@ -140,8 +140,20 @@ export function StructuralGraph({
       })
       .flat()
 
+    const newEdges: Edge[] = serverEvents
+      .filter(event => (event as any)._id && event.nextEventId)
+      .filter(
+        event => !!serverEvents.find(v => (v as any)._id === event.nextEventId),
+      )
+      .map((event, i) => ({
+        id: (event as any)._id + '-' + event.nextEventId,
+        source: (event as any)._id,
+        target: event.nextEventId as string,
+      }))
+
     // setNodes([...newNodes, ...nodes] as any)
     setNodes(newNodes as any)
+    setEdges(newEdges as any)
   }, [serverEvents])
 
   // const [dimensions, setDimensions] = React.useState({
