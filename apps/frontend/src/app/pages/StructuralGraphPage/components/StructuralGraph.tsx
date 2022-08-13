@@ -37,7 +37,6 @@ const initialNodes: CustomNode[] = [
     data: { label: 'Input Node' },
     position: { x: 250, y: 25 },
   },
-
   {
     id: '2',
     // you can also pass a React component as a label
@@ -105,17 +104,37 @@ function sortEvents(
   return 0
 }
 
-export function StructuralGraph({
-  serverEvents,
-}: {
-  serverEvents: GameEvent[]
-}) {
-  const [nodes, setNodes] = React.useState<Node[]>(initialNodes)
-  const [edges, setEdges] = React.useState(initialEdges)
+class GameEventsBuilder {
+  private readonly events: GameEvent[]
+  private readonly nodes: { [key: string]: GameEvent } = {}
+  private readonly eventsMatrix: {
+    [version: string]: {
+      [type: string]: GameEvent[]
+    }
+  } = {}
 
-  React.useEffect(() => {
+  constructor(events: GameEvent[]) {
+    this.events = events
+
+    events.forEach(event => {
+      const { version, type } = event
+
+      if (!this.eventsMatrix[version]) this.eventsMatrix[version] = {}
+
+      if (!this.eventsMatrix[version][type]) {
+        this.eventsMatrix[version][type] = [event]
+      } else {
+        this.eventsMatrix[version][type].push(event)
+      }
+    })
+  }
+
+  getGraphInput(): {
+    nodes: CustomNode[]
+    edges: Edge[]
+  } {
     const versionCollection = {} as { [key: string]: GameEvent[] }
-    serverEvents.forEach(event => {
+    this.events.forEach(event => {
       const version = event.version
 
       if (!versionCollection[version]) {
@@ -125,35 +144,54 @@ export function StructuralGraph({
       }
     })
 
-    const newNodes = Object.entries(versionCollection)
+    //TODO remake
+    const sortedByVersionNodes = Object.entries(versionCollection)
       .sort(sortEvents)
-      .map(([_, eventRow], yOffset) => {
-        return eventRow.map((event, xOffset) => ({
-          id: (event as any)._id,
+      .map(([_, eventRow], yOffset) =>
+        eventRow.map<CustomNode>((event, xOffset) => ({
+          id: event.id,
           type: 'card',
           data: event,
           position: {
             x: xOffset * 280,
             y: yOffset * 160,
           },
-        }))
-      })
-      .flat()
-
-    const newEdges: Edge[] = serverEvents
-      .filter(event => (event as any)._id && event.nextEventId)
-      .filter(
-        event => !!serverEvents.find(v => (v as any)._id === event.nextEventId),
+        })),
       )
+
+    const nodes = sortedByVersionNodes.flat()
+
+    const edges = this.events
+      .filter(event => event.id && event.nextEventId)
+      .filter(event => !!this.events.find(v => v.id === event.nextEventId))
       .map((event, i) => ({
-        id: (event as any)._id + '-' + event.nextEventId,
-        source: (event as any)._id,
+        id: event.id + '-' + event.nextEventId,
+        source: event.id,
         target: event.nextEventId as string,
       }))
 
-    // setNodes([...newNodes, ...nodes] as any)
-    setNodes(newNodes as any)
-    setEdges(newEdges as any)
+    return {
+      nodes,
+      edges,
+    }
+  }
+}
+
+export function StructuralGraph({
+  serverEvents,
+}: {
+  serverEvents: GameEvent[]
+}) {
+  const [nodes, setNodes] = React.useState<Node[]>(initialNodes)
+  const [edges, setEdges] = React.useState(initialEdges)
+
+  React.useEffect(() => {
+    const builder = new GameEventsBuilder(serverEvents)
+
+    const { nodes, edges } = builder.getGraphInput()
+
+    setNodes(nodes as any)
+    setEdges(edges as any)
   }, [serverEvents])
 
   // const [dimensions, setDimensions] = React.useState({
