@@ -30,23 +30,6 @@ export function StructuralGraph({
     setEdges(edges)
   }, [serverEvents])
 
-  // const [dimensions, setDimensions] = React.useState({
-  //   height: window.innerHeight,
-  //   width: window.innerWidth,
-  // })
-
-  // React.useEffect(() => {
-  //   function handleResize() {
-  //     console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
-  //     // setDimensions({
-  //     //   height: window.innerHeight,
-  //     //   width: window.innerWidth,
-  //     // })
-  //   }
-
-  //   // window.addEventListener('resize', handleResize)
-  // })
-
   const onNodesChange = React.useCallback(
     (changes: NodeChange[]) => {
       // console.log(changes)
