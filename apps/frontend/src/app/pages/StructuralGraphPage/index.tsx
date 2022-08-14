@@ -14,7 +14,15 @@ export function StructuralGraphPage() {
       .get('http://127.0.0.1:3000/api/events')
       .then(res => res.data)
       .then(data => {
-        setEvents(data)
+        setEvents(
+          data.map((event: any) => {
+            const { _id, ...rest } = event
+            return {
+              id: _id,
+              ...rest,
+            }
+          }),
+        )
       })
       .catch(e => console.log(e))
     // }, 5000)
