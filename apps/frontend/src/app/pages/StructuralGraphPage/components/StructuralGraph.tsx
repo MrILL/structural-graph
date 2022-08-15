@@ -32,7 +32,43 @@ export function StructuralGraph({
 
   const onNodesChange = React.useCallback(
     (changes: NodeChange[]) => {
-      // console.log(changes)
+      console.log(changes)
+      const selectChange = changes.find(change => change.type === 'select')
+      if (selectChange && selectChange.type === 'select') {
+        let edgesOfNode
+
+        if (selectChange.selected === true) {
+          edgesOfNode = edges.map(edge => {
+            // if (edge.target === selectChange.id) {
+            //   //TODO update incoming edges
+            //   return { ...edge, stroke: '#9c9998', strokeWidth: 4 }
+            // } else if (edge.source === selectChange.id) {
+            //   //TODO update outcoming edges
+            //   return { ...edge, stroke: '#d9765d', strokeWidth: 4 }
+            // } else {
+            return edge
+            // }
+          })
+        } else {
+          //TODO make all edges default
+          edgesOfNode = edges.map(edge => {
+            // if (
+            //   edge.target === selectChange.id ||
+            //   edge.source === selectChange.id
+            // ) {
+            //   const { stroke, strokeWidth, ...rest } = edge as any
+            //   return rest
+            // } else {
+            return edge
+            // }
+          })
+        }
+
+        setEdges(edgesOfNode)
+
+        //TODO set edges
+      }
+
       return setNodes(nds => applyNodeChanges(changes, nds))
     },
     [setNodes],
@@ -44,7 +80,6 @@ export function StructuralGraph({
 
   const nodeTypes = React.useMemo(() => ({ card: EventCard }), [])
 
-  // return <div>cock</div>
   return (
     <ReactFlow
       style={{
