@@ -23,26 +23,31 @@ function customApplyEdgeChanges(changes: any[], edges: any[]): any[] {
     if (selectChange.selected) {
       if (edge.target === selectChange.id) {
         //TODO update incoming edges
-        console.log('target:', { ...edge, stroke: '#9c9998', strokeWidth: 4 })
-        return { ...edge, stroke: '#9c9998', strokeWidth: 4 }
+        const newEdge = {
+          ...edge,
+          style: { stroke: '#9c9998', strokeWidth: 4 },
+        }
+        console.log('target:', newEdge)
+        return newEdge
       } else if (edge.source === selectChange.id) {
         //TODO update outcoming edges
-        console.log('source:', { ...edge, stroke: '#d9765d', strokeWidth: 4 })
-        return { ...edge, stroke: '#d9765d', strokeWidth: 4 }
+        const newEdge = {
+          ...edge,
+          style: { stroke: '#d9765d', strokeWidth: 4 },
+        }
+        console.log('source:', newEdge)
+        return newEdge
       } else {
         return edge
       }
     } else {
-      return edge
-      // if (
-      //   edge.target === selectChange.id ||
-      //   edge.source === selectChange.id
-      // ) {
-      //   const { stroke, strokeWidth, ...rest } = edge as any
-      //   return rest
-      // } else {
-      //   return edge
-      // }
+      // return edge
+      if (edge.target === selectChange.id || edge.source === selectChange.id) {
+        const { style, ...rest } = edge as any
+        return rest
+      } else {
+        return edge
+      }
     }
   })
 
