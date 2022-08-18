@@ -2,7 +2,6 @@ import * as React from 'react'
 import ReactFlow, {
   applyNodeChanges,
   Edge,
-  EdgeChange,
   Node,
   NodeChange,
 } from 'react-flow-renderer'
@@ -12,42 +11,40 @@ import { GameEvent } from '@sg/types'
 import { EventCard } from './EventCard'
 import { GameEventsBuilder } from '../lib/GameEventsBuilder'
 
+const EDGE_SELECTED_INCOMING_COLOR = '#9c9998'
+const EDGE_SELECTED_OUTCOMING_COLOR = '#d9765d'
+
 function customApplyEdgeChanges(changes: any[], edges: any[]): any[] {
-  const selectChange = changes.find(change => change.type === 'select')
+  let newEdges = edges
 
-  const newEdges: any[] = edges.map(edge => {
-    if (!selectChange || selectChange.type !== 'select') {
-      return edge
-    }
+  changes.forEach(change => {
+    if (change.type === 'select') {
+      newEdges = newEdges.map(edge => {
+        if (change.selected) {
+          if (edge.target !== change.id && edge.source !== change.id) {
+            return edge
+          }
 
-    if (selectChange.selected) {
-      if (edge.target === selectChange.id) {
-        //TODO update incoming edges
-        const newEdge = {
-          ...edge,
-          style: { stroke: '#9c9998', strokeWidth: 4 },
+          return {
+            ...edge,
+            style: {
+              stroke:
+                edge.target === change.id
+                  ? EDGE_SELECTED_INCOMING_COLOR
+                  : EDGE_SELECTED_OUTCOMING_COLOR,
+              strokeWidth: 4,
+            },
+          }
+        } else {
+          if (edge.target !== change.id && edge.source !== change.id) {
+            return edge
+          }
+
+          const { style, ...rest } = edge as any
+
+          return rest
         }
-        console.log('target:', newEdge)
-        return newEdge
-      } else if (edge.source === selectChange.id) {
-        //TODO update outcoming edges
-        const newEdge = {
-          ...edge,
-          style: { stroke: '#d9765d', strokeWidth: 4 },
-        }
-        console.log('source:', newEdge)
-        return newEdge
-      } else {
-        return edge
-      }
-    } else {
-      // return edge
-      if (edge.target === selectChange.id || edge.source === selectChange.id) {
-        const { style, ...rest } = edge as any
-        return rest
-      } else {
-        return edge
-      }
+      })
     }
   })
 
