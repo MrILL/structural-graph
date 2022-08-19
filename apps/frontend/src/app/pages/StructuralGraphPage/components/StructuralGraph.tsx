@@ -9,7 +9,9 @@ import ReactFlow, {
 import { GameEvent } from '@sg/types'
 
 import { EventCard } from './EventCard'
+import { CharacterDivider } from './CharacterDivider'
 import { GameEventsBuilder } from '../lib/GameEventsBuilder'
+import { CustomNode } from '../types'
 
 const EDGE_SELECTED_INCOMING_COLOR = '#9c9998'
 const EDGE_SELECTED_OUTCOMING_COLOR = '#d9765d'
@@ -59,7 +61,7 @@ export function StructuralGraph({
   // const [nodes, setNodes] = React.useState<Node[]>([])
   // const [edges, setEdges] = React.useState<Edge[]>([])
   const [state, setState] = React.useState<{
-    nodes: Node[]
+    nodes: CustomNode[]
     edges: Edge[]
   }>({
     nodes: [],
@@ -82,7 +84,7 @@ export function StructuralGraph({
     (changes: NodeChange[]) => {
       console.log(changes)
       setState({
-        nodes: applyNodeChanges(changes, nodes),
+        nodes: applyNodeChanges(changes, nodes as any),
         edges: customApplyEdgeChanges(changes, edges),
       })
       // setEdges(edgs => customApplyEdgeChanges(changes, edgs))
@@ -96,12 +98,11 @@ export function StructuralGraph({
       // setEdges
     ],
   )
-  // const onEdgesChange = React.useCallback(
-  //   (changes: EdgeChange[]) => setEdges(eds => applyEdgeChanges(changes, eds)),
-  //   [setEdges],
-  // )
 
-  const nodeTypes = React.useMemo(() => ({ card: EventCard }), [])
+  const nodeTypes = React.useMemo(
+    () => ({ card: EventCard, characterDivider: CharacterDivider }),
+    [],
+  )
 
   return (
     <ReactFlow
@@ -110,10 +111,9 @@ export function StructuralGraph({
         width: '100%',
       }}
       nodeTypes={nodeTypes}
-      nodes={nodes}
+      nodes={nodes as any}
       edges={edges}
       onNodesChange={onNodesChange}
-      // onEdgesChange={onEdgesChange}
       minZoom={0.1}
     />
   )

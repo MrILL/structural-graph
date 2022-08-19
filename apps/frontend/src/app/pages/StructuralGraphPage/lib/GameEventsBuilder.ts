@@ -3,6 +3,9 @@ import { Edge } from 'react-flow-renderer'
 import { GameEvent } from '@sg/types'
 import { CustomNode } from '../types'
 
+const Z_SECTION_LAYER = 50
+const Z_CARD_LAYER = 100
+
 const MAIN_ROUTE_NAME = 'Events'
 
 const CARD_WIDTH = 240 //TODO
@@ -82,11 +85,13 @@ function getCharacters(eventsMatrix: EventsMatrix): Set<string> {
 function getCharactersXRange(characters: Set<string>): {
   [character: string]: AxisRange
 } {
+  const charactersSet = new Set(characters)
+
   const charactersXRange: {
     [character: string]: AxisRange
   } = {}
 
-  if (!characters.has(MAIN_ROUTE_NAME)) {
+  if (!charactersSet.has(MAIN_ROUTE_NAME)) {
     console.error(`Not found main route: ${MAIN_ROUTE_NAME}`)
   }
   charactersXRange[MAIN_ROUTE_NAME] = {
@@ -94,10 +99,10 @@ function getCharactersXRange(characters: Set<string>): {
     max: CARD_WIDTH + X_CARD_OFFSET * 2 + 120,
   }
 
-  characters.delete(MAIN_ROUTE_NAME)
+  charactersSet.delete(MAIN_ROUTE_NAME)
 
   let curX = charactersXRange[MAIN_ROUTE_NAME].max + X_OFFSET
-  characters.forEach(route => {
+  charactersSet.forEach(route => {
     const min = curX
     curX += CARD_WIDTH + X_CARD_OFFSET * 2
 
@@ -155,7 +160,8 @@ export class GameEventsBuilder {
     } = getCharactersXRange(characters)
 
     const nodes: CustomNode[] = []
-    let curYStart = 0
+    const YStart = 0
+    let curYStart = YStart
     Object.entries(this.eventsMatrix)
       .sort(([v1], [v2]) => sortEvents(v1, v2))
       .forEach(
@@ -180,6 +186,7 @@ export class GameEventsBuilder {
                     x,
                     y,
                   },
+                  zIndex: Z_CARD_LAYER,
                 }
                 nodes.push(node)
               })
@@ -189,6 +196,35 @@ export class GameEventsBuilder {
 
         (curYStart += Y_OFFSET),
       )
+
+    /// character divider
+
+    const YEnd = curYStart
+    characters.forEach(character => {
+      const xRange = charactersXRange[character]
+
+      const height = YEnd - YStart
+      const width = xRange.max - xRange.min
+      nodes.push({
+        id: `${character}-characterDivider`,
+        type: 'characterDivider',
+        style: {
+          width,
+          height,
+          background: 'grey',
+        },
+        position: {
+          x: xRange.min,
+          y: YStart,
+        },
+        zIndex: Z_SECTION_LAYER,
+        draggable: false,
+        selectable: false,
+      })
+      console.log(nodes[nodes.length - 1])
+    })
+
+    ///
 
     const edges = this.events
       .filter(event => event.id && event.nextEventId)
