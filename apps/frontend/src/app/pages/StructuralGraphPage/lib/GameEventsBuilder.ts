@@ -1,7 +1,12 @@
 import { Edge } from 'react-flow-renderer'
 
 import { GameEvent } from '@sg/types'
-import { CustomNode } from '../types'
+import {
+  CardNode,
+  CardNodeData,
+  CharacterDividerNode,
+  CustomNode,
+} from '../types'
 
 const Z_SECTION_LAYER = 50
 const Z_CARD_LAYER = 100
@@ -24,6 +29,59 @@ type EventsMatrix = {
 type AxisRange = {
   min: number
   max: number
+}
+
+type CardNodeParameters = {
+  id: string
+  data: CardNodeData
+  x: number
+  y: number
+}
+
+function createCardNode({ id, data, x, y }: CardNodeParameters): CardNode {
+  return {
+    id,
+    type: 'card',
+    data,
+    position: {
+      x,
+      y,
+    },
+    zIndex: Z_CARD_LAYER,
+  }
+}
+
+type CharacterDividerParameters = {
+  name: string
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+function createCharacterDivider({
+  name,
+  x,
+  y,
+  width,
+  height,
+}: CharacterDividerParameters): CharacterDividerNode {
+  return {
+    id: `${name}-characterDivider`,
+    type: 'characterDivider',
+    style: {
+      width,
+      height,
+      background: 'grey',
+    },
+    position: {
+      x,
+      y,
+    },
+    zIndex: Z_SECTION_LAYER,
+    draggable: false,
+    selectable: false,
+  } as CharacterDividerNode
 }
 
 function sortEvents(v1: string, v2: string): number {
@@ -82,9 +140,13 @@ function getCharacters(eventsMatrix: EventsMatrix): Set<string> {
   return characters
 }
 
-function getCharactersXRange(characters: Set<string>): {
+type CharactersXRangeCollection = {
   [character: string]: AxisRange
-} {
+}
+
+function getCharactersXRange(
+  characters: Set<string>,
+): CharactersXRangeCollection {
   const charactersSet = new Set(characters)
 
   const charactersXRange: {
@@ -159,6 +221,8 @@ export class GameEventsBuilder {
       [character: string]: AxisRange
     } = getCharactersXRange(characters)
 
+    /// card
+
     const nodes: CustomNode[] = []
     const YStart = 0
     let curYStart = YStart
@@ -178,17 +242,13 @@ export class GameEventsBuilder {
                   curYStart = yAfterCard
                 }
 
-                const node: CustomNode = {
+                const cardNode: CustomNode = createCardNode({
                   id: event.id,
-                  type: 'card',
                   data: event,
-                  position: {
-                    x,
-                    y,
-                  },
-                  zIndex: Z_CARD_LAYER,
-                }
-                nodes.push(node)
+                  x,
+                  y,
+                })
+                nodes.push(cardNode)
               })
             },
           )
@@ -200,31 +260,21 @@ export class GameEventsBuilder {
     /// character divider
 
     const YEnd = curYStart
+    const characterDividerHeight = YEnd - YStart
     characters.forEach(character => {
       const xRange = charactersXRange[character]
 
-      const height = YEnd - YStart
-      const width = xRange.max - xRange.min
-      nodes.push({
-        id: `${character}-characterDivider`,
-        type: 'characterDivider',
-        style: {
-          width,
-          height,
-          background: 'grey',
-        },
-        position: {
-          x: xRange.min,
-          y: YStart,
-        },
-        zIndex: Z_SECTION_LAYER,
-        draggable: false,
-        selectable: false,
+      const characterDivider = createCharacterDivider({
+        name: character,
+        x: xRange.min,
+        y: YStart,
+        width: xRange.max - xRange.min,
+        height: characterDividerHeight,
       })
-      console.log(nodes[nodes.length - 1])
+      nodes.push(characterDivider)
     })
 
-    ///
+    /// card connections
 
     const edges = this.events
       .filter(event => event.id && event.nextEventId)

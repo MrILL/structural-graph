@@ -2,13 +2,14 @@ import { Node } from 'react-flow-renderer'
 
 import { GameEvent } from '@sg/types'
 
-type CardNode = {
+export type CardNodeData = GameEvent | { [key: string]: unknown }
+export type CardNode = {
   type: 'card'
-  data: GameEvent | { [key: string]: unknown }
-}
+  data: CardNodeData
+} & Node
 
-type CharacterDividerNode = {
+export type CharacterDividerNode = {
   type: 'characterDivider'
-}
+} & Node
 
 export type CustomNode = CardNode | CharacterDividerNode | Node

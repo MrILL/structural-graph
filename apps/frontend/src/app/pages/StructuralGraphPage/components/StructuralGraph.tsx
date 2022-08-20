@@ -67,7 +67,6 @@ export function StructuralGraph({
     nodes: [],
     edges: [],
   })
-  // console.log(edges)
   const { nodes, edges } = state
 
   React.useEffect(() => {
@@ -76,13 +75,10 @@ export function StructuralGraph({
     const { nodes, edges } = builder.getGraphInput()
 
     setState({ nodes, edges })
-    // setNodes(nodes)
-    // setEdges(edges)
   }, [serverEvents])
 
   const onNodesChange = React.useCallback(
     (changes: NodeChange[]) => {
-      console.log(changes)
       setState({
         nodes: applyNodeChanges(changes, nodes as any),
         edges: customApplyEdgeChanges(changes, edges),
