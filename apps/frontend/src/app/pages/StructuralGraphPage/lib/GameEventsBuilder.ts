@@ -8,11 +8,12 @@ import {
   CustomNode,
 } from '../types'
 
-const Z_SECTION_LAYER = 50
+const Z_SECTION_LAYER = -50
 const Z_CARD_LAYER = 100
 
 const MAIN_ROUTE_NAME = 'Events'
 
+const MAIN_ROUTE_X_OFFSET = 60
 const CARD_WIDTH = 240 //TODO
 const CARD_HEIGHT = 150
 const X_CARD_OFFSET = 20
@@ -157,8 +158,8 @@ function getCharactersXRange(
     console.error(`Not found main route: ${MAIN_ROUTE_NAME}`)
   }
   charactersXRange[MAIN_ROUTE_NAME] = {
-    min: 0,
-    max: CARD_WIDTH + X_CARD_OFFSET * 2 + 120,
+    min: -MAIN_ROUTE_X_OFFSET,
+    max: CARD_WIDTH + X_CARD_OFFSET * 2 + MAIN_ROUTE_X_OFFSET,
   }
 
   charactersSet.delete(MAIN_ROUTE_NAME)
@@ -235,7 +236,15 @@ export class GameEventsBuilder {
           Object.entries(charactersCollection).forEach(
             ([character, events]) => {
               events.forEach((event, i) => {
-                const x = charactersXRange[character].min + X_CARD_OFFSET
+                //TODO remake
+                const x =
+                  charactersXRange[character].min +
+                  X_CARD_OFFSET +
+                  (charactersXRange[character].max -
+                    charactersXRange[character].min -
+                    CARD_WIDTH -
+                    X_CARD_OFFSET * 2) /
+                    2
                 const y = minY + (CARD_HEIGHT + Y_CARD_OFFSET) * i
                 const yAfterCard = y + CARD_HEIGHT + Y_CARD_OFFSET
                 if (yAfterCard > curYStart) {
