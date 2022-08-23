@@ -1,6 +1,6 @@
 import { Edge } from 'react-flow-renderer'
 
-import { HSLColorOptions, PaletteGenerator } from './PaletteGenerator'
+import { HSLAOptions, PaletteGenerator } from './PaletteGenerator'
 import { GameEvent } from '@sg/types'
 import {
   CardNode,
@@ -33,36 +33,11 @@ type AxisRange = {
   max: number
 }
 
-type CharacterBackgroundColorCollection = {
-  [name: string]: string
-}
-
-const DEFAULT_CHARACTER_BACKGROUND_COLOR_OPTIONS: HSLColorOptions = {
+//TODO reuse
+const DEFAULT_CHARACTER_BACKGROUND_COLOR_OPTIONS: HSLAOptions = {
   saturation: 50,
   lightness: 75,
   alpha: 0.8,
-}
-function getCharactersBackgroundColorCollection(
-  characters: Set<string>,
-  // options?: HSLColorOptions, //TODO unused
-): CharacterBackgroundColorCollection {
-  const res: CharacterBackgroundColorCollection = {}
-
-  const colorOptions = Object.assign(
-    DEFAULT_CHARACTER_BACKGROUND_COLOR_OPTIONS,
-    // options,
-  )
-
-  const colorPalette = PaletteGenerator.createHSLPalette(
-    characters.size,
-    colorOptions,
-  )
-
-  Array.from(characters).forEach((name, i) => {
-    res[name] = colorPalette[i]
-  })
-
-  return res
 }
 
 type CardNodeParameters = {
@@ -91,7 +66,6 @@ type CharacterDividerParameters = {
   y: number
   width: number
   height: number
-  backgroundColor?: string //TODO use react version of style
 }
 
 function createCharacterDivider({
@@ -100,7 +74,6 @@ function createCharacterDivider({
   y,
   width,
   height,
-  backgroundColor,
 }: CharacterDividerParameters): CharacterDividerNode {
   return {
     id: `${name}-characterDivider`,
@@ -108,7 +81,7 @@ function createCharacterDivider({
     style: {
       width,
       height,
-      background: backgroundColor ?? 'grey',
+      background: PaletteGenerator.getHSLAByKey(name),
     },
     position: {
       x,
@@ -305,9 +278,6 @@ export class GameEventsBuilder {
 
     /// character divider
 
-    const characterBackgroundColorCollection =
-      getCharactersBackgroundColorCollection(characters)
-
     const YEnd = curYStart
     const characterDividerHeight = YEnd - YStart
     characters.forEach(character => {
@@ -319,7 +289,6 @@ export class GameEventsBuilder {
         y: YStart,
         width: xRange.max - xRange.min,
         height: characterDividerHeight,
-        backgroundColor: characterBackgroundColorCollection[character],
       })
       nodes.push(characterDivider)
     })
