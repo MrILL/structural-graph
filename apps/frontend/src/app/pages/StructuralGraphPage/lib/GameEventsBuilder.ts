@@ -33,10 +33,9 @@ type AxisRange = {
   max: number
 }
 
-//TODO reuse
 const DEFAULT_CHARACTER_BACKGROUND_COLOR_OPTIONS: HSLAOptions = {
-  saturation: 50,
-  lightness: 75,
+  saturation: { min: 45, max: 55 },
+  lightness: { min: 60, max: 70 },
   alpha: 0.8,
 }
 
@@ -81,7 +80,10 @@ function createCharacterDivider({
     style: {
       width,
       height,
-      background: PaletteGenerator.getHSLAByKey(name),
+      background: PaletteGenerator.getHSLAByKey(
+        name,
+        DEFAULT_CHARACTER_BACKGROUND_COLOR_OPTIONS,
+      ),
     },
     position: {
       x,
