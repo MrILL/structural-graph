@@ -34,8 +34,8 @@ type AxisRange = {
 }
 
 const DEFAULT_CHARACTER_BACKGROUND_COLOR_OPTIONS: HSLAOptions = {
-  saturation: { min: 45, max: 55 },
-  lightness: { min: 60, max: 70 },
+  saturation: { min: 10, max: 95 },
+  lightness: { min: 30, max: 95 },
   alpha: 0.8,
 }
 
