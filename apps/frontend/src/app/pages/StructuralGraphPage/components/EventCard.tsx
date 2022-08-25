@@ -15,10 +15,15 @@ export function EventCard({
 }) {
   return (
     <Wrapper
-      style={{
-        borderWidth: selected ? 8 : 0,
-        borderRadius: selected ? 40 : 32,
-      }}
+      style={
+        selected
+          ? {
+              borderWidth: 6,
+              borderRadius: 40,
+              borderColor: '#7f54d6',
+            }
+          : {}
+      }
     >
       <Handle type="target" position={Position.Top} />
       <Image src={data.imgUrl ?? imagePlaceholder} alt="new" />
@@ -38,12 +43,18 @@ const Wrapper = styled.div`
   height: ${height}px;
   position: relative;
 
+  box-sizing: border-box;
+
   border-radius: 32px;
   overflow: hidden;
   font-size: 12px;
 
-  // border: 1px solid #db6b6b;
-  border: 1px solid #7f54d6;
+  border: 1px solid #db6b6b;
+  // border: 1px solid #7f54d6;
+
+  &:hover {
+    border: 4px solid #474747;
+  }
 `
 
 const Image = styled.img`
