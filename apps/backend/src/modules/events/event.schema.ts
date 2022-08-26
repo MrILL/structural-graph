@@ -1,6 +1,8 @@
-import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
+import { Prop, Schema, raw } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
+
+import { BaseSchemaFactory } from '../../utils/BaseSchemaFactory'
 
 export enum EventRequirementType {
   Text = 'text',
@@ -21,7 +23,6 @@ export class EventRequirement {
 
 @Schema()
 export class Event {
-  @Prop()
   id: string
 
   @Prop({ required: true, unique: true })
@@ -107,4 +108,4 @@ export class Event {
 
 export type EventDocument = Event & Document
 
-export const EventSchema = SchemaFactory.createForClass(Event)
+export const EventSchema = BaseSchemaFactory.createForClass(Event)

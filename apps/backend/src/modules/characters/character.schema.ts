@@ -1,12 +1,12 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { Prop, Schema } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
 
 import { GameCharacter, GameEvent, Id } from '@sg/types'
+import { BaseSchemaFactory } from '../../utils/BaseSchemaFactory'
 
 @Schema()
 export class Character implements GameCharacter {
-  @Prop({ type: String })
   id: Id
 
   @Prop({ required: true, unique: true })
@@ -61,4 +61,4 @@ export class Character implements GameCharacter {
 
 export type CharacterDocument = Character & Document
 
-export const CharacterSchema = SchemaFactory.createForClass(Character)
+export const CharacterSchema = BaseSchemaFactory.createForClass(Character)
