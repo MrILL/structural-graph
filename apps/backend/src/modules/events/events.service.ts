@@ -26,9 +26,9 @@ export class EventsService {
       })
       .exec()
     if (check) {
-      console.log(`Id of already existed result ${check._id}`)
+      console.log(`Id of already existed result ${check.id}`)
       throw new ConflictException(
-        `Scrape result of Event page already exists with id:${check._id}`,
+        `Scrape result of Event page already exists with id:${check.id}`,
       )
     }
 
@@ -79,7 +79,7 @@ export class EventsService {
     const newEvent = await this.eventModel.create(createEventDto)
 
     const res = await newEvent.save()
-    console.log(`Created event with id:${res._id}`)
+    console.log(`Created event with id:${res.id}`)
 
     return res
   }
@@ -88,7 +88,7 @@ export class EventsService {
     const dbQuery = this.eventModel.find()
 
     if (queries.title) {
-      dbQuery.where('title', queries.title)
+      dbQuery.where('title', { $regex: queries.title })
     }
 
     if (queries.wikiUrl) {
@@ -104,7 +104,7 @@ export class EventsService {
   }
 
   async findOne(eventId: string): Promise<Event> {
-    const event = await this.eventModel.findOne({ _id: eventId }).exec()
+    const event = await this.eventModel.findOne({ id: eventId }).exec()
     if (!event) {
       throw new NotFoundException('Event not found')
     }
@@ -116,15 +116,15 @@ export class EventsService {
     eventId: string,
     updateEventDto: UpdateEventDto,
   ): Promise<Event> {
-    const event = await this.eventModel.findOne({ _id: eventId }).exec()
+    const event = await this.eventModel.findOne({ id: eventId }).exec()
     if (!event) {
       throw new NotFoundException('Event not found')
     }
 
     const res = await this.eventModel
-      .updateOne({ _id: eventId }, updateEventDto)
+      .updateOne({ id: eventId }, updateEventDto)
       .exec()
-    console.log(`Updated ${res.modifiedCount} event with id:${event._id}`)
+    console.log(`Updated ${res.modifiedCount} event with id:${event.id}`)
 
     return event
   }
@@ -137,7 +137,7 @@ export class EventsService {
 
     await Promise.all(
       events.map(async event => {
-        return this.remove(event._id)
+        return this.remove(event.id)
       }),
     )
 
@@ -147,13 +147,13 @@ export class EventsService {
   }
 
   async remove(eventId: string): Promise<Event> {
-    const event = await this.eventModel.findOne({ _id: eventId }).exec()
+    const event = await this.eventModel.findOne({ id: eventId }).exec()
     if (!event) {
       throw new NotFoundException('Event not found')
     }
 
-    const res = await this.eventModel.deleteOne({ _id: eventId }).exec()
-    console.log(`Deleted ${res.deletedCount} event with id:${event._id}`)
+    const res = await this.eventModel.deleteOne({ id: eventId }).exec()
+    console.log(`Deleted ${res.deletedCount} event with id:${event.id}`)
 
     return event
   }

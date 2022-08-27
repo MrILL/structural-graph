@@ -23,14 +23,14 @@ export class CharactersService {
       .findOne({ name: createCharacterDto.name })
       .exec()
     if (check) {
-      console.log(`Character exists with id:${check._id} & name:${check.name}`)
-      throw new ConflictException(`Character exists with id:${check._id}`)
+      console.log(`Character exists with id:${check.id} & name:${check.name}`)
+      throw new ConflictException(`Character exists with id:${check.id}`)
     }
 
     const newCharacter = await this.characterModel.create(createCharacterDto)
 
     const res = await newCharacter.save()
-    console.log(`Created character with id:${res._id}`)
+    console.log(`Created character with id:${res.id}`)
 
     return res
   }
@@ -56,7 +56,7 @@ export class CharactersService {
 
   async findOne(characterId: string): Promise<Character> {
     const character = await this.characterModel
-      .findOne({ _id: characterId })
+      .findOne({ id: characterId })
       .exec()
     if (!character) {
       throw new NotFoundException('Character not found')
@@ -70,17 +70,17 @@ export class CharactersService {
     updateCharacterDto: UpdateCharacterDto,
   ): Promise<Character> {
     const character = await this.characterModel
-      .findOne({ _id: characterId })
+      .findOne({ id: characterId })
       .exec()
     if (!character) {
       throw new NotFoundException('Character not found')
     }
 
     const res = await this.characterModel
-      .updateOne({ _id: characterId }, updateCharacterDto)
+      .updateOne({ id: characterId }, updateCharacterDto)
       .exec()
     console.log(
-      `Updated ${res.modifiedCount} character with id:${character._id}`,
+      `Updated ${res.modifiedCount} character with id:${character.id}`,
     )
 
     return character
@@ -94,7 +94,7 @@ export class CharactersService {
 
     await Promise.all(
       characters.map(async character => {
-        return this.remove(character._id)
+        return this.remove(character.id)
       }),
     )
 
@@ -105,16 +105,14 @@ export class CharactersService {
 
   async remove(characterId: string): Promise<Character> {
     const character = await this.characterModel
-      .findOne({ _id: characterId })
+      .findOne({ id: characterId })
       .exec()
     if (!character) {
       throw new NotFoundException('Character not found')
     }
 
-    const res = await this.characterModel.deleteOne({ _id: characterId }).exec()
-    console.log(
-      `Deleted ${res.deletedCount} character with id:${character._id}`,
-    )
+    const res = await this.characterModel.deleteOne({ id: characterId }).exec()
+    console.log(`Deleted ${res.deletedCount} character with id:${character.id}`)
 
     return character
   }

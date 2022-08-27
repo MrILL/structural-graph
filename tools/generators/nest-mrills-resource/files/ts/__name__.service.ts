@@ -21,16 +21,16 @@ export class <%= classify(name) %>Service {
     //  .findOne({}) //TODO
     //  .exec()
     // if (check) {
-    //  console.log(`Id of already existed result ${check._id}`)
+    //  console.log(`Id of already existed result ${check.id}`)
     //  throw new ConflictException(
-    //    `<%= singular(classify(name)) %> exists with id:${check._id}`,
+    //    `<%= singular(classify(name)) %> exists with id:${check.id}`,
     //  )
     // }
 
     const new<%= singular(classify(name)) %> = await this.<%= singular(name) %>Model.create(create<%= singular(classify(name)) %>Dto)
 
     const res = await new<%= singular(classify(name)) %>.save()
-    console.log(`Created <%= singular(name) %> with id:${res._id}`)
+    console.log(`Created <%= singular(name) %> with id:${res.id}`)
 
     return res
   }
@@ -45,7 +45,7 @@ export class <%= classify(name) %>Service {
   }
 
   async findOne(<%= singular(name) %>Id: string): Promise<<%= singular(classify(name)) %>> {
-    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ _id: <%= singular(name) %>Id }).exec()
+    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ id: <%= singular(name) %>Id }).exec()
     if (!<%= singular(name) %>) {
       throw new NotFoundException('<%= singular(classify(name)) %> not found')
     }
@@ -57,27 +57,27 @@ export class <%= classify(name) %>Service {
     <%= singular(name) %>Id: string,
     update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto,
   ): Promise<<%= singular(classify(name)) %>> {
-    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ _id: <%= singular(name) %>Id }).exec()
+    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ id: <%= singular(name) %>Id }).exec()
     if (!<%= singular(name) %>) {
       throw new NotFoundException('<%= singular(classify(name)) %> not found')
     }
 
     const res = await this.<%= singular(name) %>Model
-      .updateOne({ _id: <%= singular(name) %>Id }, update<%= singular(classify(name)) %>Dto)
+      .updateOne({ id: <%= singular(name) %>Id }, update<%= singular(classify(name)) %>Dto)
       .exec()
-    console.log(`Updated ${res.modifiedCount} <%= singular(name) %> with id:${<%= singular(name) %>._id}`)
+    console.log(`Updated ${res.modifiedCount} <%= singular(name) %> with id:${<%= singular(name) %>.id}`)
 
     return <%= singular(name) %>
   }
 
   async remove(<%= singular(name) %>Id: string): Promise<<%= singular(classify(name)) %>> {
-    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ _id: <%= singular(name) %>Id }).exec()
+    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ id: <%= singular(name) %>Id }).exec()
     if (!<%= singular(name) %>) {
       throw new NotFoundException('<%= singular(classify(name)) %> not found')
     }
 
-    const res = await this.<%= singular(name) %>Model.deleteOne({ _id: <%= singular(name) %>Id }).exec()
-    console.log(`Deleted ${res.deletedCount} <%= singular(name) %> with id:${<%= singular(name) %>._id}`)
+    const res = await this.<%= singular(name) %>Model.deleteOne({ id: <%= singular(name) %>Id }).exec()
+    console.log(`Deleted ${res.deletedCount} <%= singular(name) %> with id:${<%= singular(name) %>.id}`)
 
     return <%= singular(name) %>
   }
