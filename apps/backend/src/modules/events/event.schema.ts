@@ -34,6 +34,9 @@ export class Event {
   @Prop({ required: true })
   type: string //"Every Day I Grow Some More" is a Main Event. //Main Event - is a link
 
+  @Prop({ required: true })
+  version: string
+
   ///
 
   @Prop()
@@ -55,9 +58,6 @@ export class Event {
   manyText?: Map<string, string>
 
   ///
-
-  @Prop({ required: true })
-  version: string
 
   @Prop()
   location?: string //or actual location page

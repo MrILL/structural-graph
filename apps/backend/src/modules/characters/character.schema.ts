@@ -2,12 +2,12 @@ import { Prop, Schema } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
 
-import { GameCharacter, GameEvent, Id } from '@sg/types'
+import { GameCharacter } from '@sg/types'
 import { BaseSchemaFactory } from '../../utils/BaseSchemaFactory'
 
 @Schema()
 export class Character implements GameCharacter {
-  id: Id
+  id: string
 
   @Prop({ required: true, unique: true })
   name: string
@@ -53,10 +53,10 @@ export class Character implements GameCharacter {
   ///
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
-  firstEventId?: GameEvent
+  firstEventId?: string
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
-  lastEventId?: GameEvent
+  lastEventId?: string
 }
 
 export type CharacterDocument = Character & Document
