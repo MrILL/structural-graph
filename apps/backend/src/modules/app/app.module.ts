@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 
 import { EventsModule } from '../events/events.module'
 import { CharactersModule } from '../characters/characters.module'
+import { EventDetailsModule } from '../event-details/event-details.module'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -20,6 +21,7 @@ import { AppService } from './app.service'
     }),
     EventsModule,
     CharactersModule,
+    EventDetailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

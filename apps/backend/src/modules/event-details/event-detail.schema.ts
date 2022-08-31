@@ -8,17 +8,14 @@ import { BaseSchemaFactory } from '../../utils/BaseSchemaFactory'
 export class EventDetails {
   id: string
 
-  @Prop({ required: true, unique: true })
-  eventId: string
-
   @Prop()
   synopsis?: string
 
   @Prop()
-  choises?: string //Possible html
+  choises?: string
 
   @Prop()
-  criteria?: string //Possible html
+  criteria?: string
 
   @Prop()
   effects?: string

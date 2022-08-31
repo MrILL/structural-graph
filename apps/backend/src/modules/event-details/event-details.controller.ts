@@ -15,6 +15,7 @@ import { EventDetails } from './event-detail.schema'
 import { CreateEventDetailsDto } from './dto/create-event-detail.dto'
 import { UpdateEventDetailsDto } from './dto/update-event-detail.dto'
 
+//TODO admin-only
 @Controller('event-details')
 export class EventDetailsController {
   constructor(private readonly eventDetailsService: EventDetailsService) {}

@@ -16,5 +16,6 @@ import { EventDetails, EventDetailsSchema } from './event-detail.schema'
   ],
   controllers: [EventDetailsController],
   providers: [EventDetailsService],
+  exports: [EventDetailsService],
 })
 export class EventDetailsModule {}
