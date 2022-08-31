@@ -56,7 +56,7 @@ export class CharactersService {
 
   async findOne(characterId: string): Promise<Character> {
     const character = await this.characterModel
-      .findOne({ id: characterId })
+      .findOne({ _id: characterId })
       .exec()
     if (!character) {
       throw new NotFoundException('Character not found')
@@ -70,14 +70,14 @@ export class CharactersService {
     updateCharacterDto: UpdateCharacterDto,
   ): Promise<Character> {
     const character = await this.characterModel
-      .findOne({ id: characterId })
+      .findOne({ _id: characterId })
       .exec()
     if (!character) {
       throw new NotFoundException('Character not found')
     }
 
     const res = await this.characterModel
-      .updateOne({ id: characterId }, updateCharacterDto)
+      .updateOne({ _id: characterId }, updateCharacterDto)
       .exec()
     console.log(
       `Updated ${res.modifiedCount} character with id:${character.id}`,
@@ -105,13 +105,13 @@ export class CharactersService {
 
   async remove(characterId: string): Promise<Character> {
     const character = await this.characterModel
-      .findOne({ id: characterId })
+      .findOne({ _id: characterId })
       .exec()
     if (!character) {
       throw new NotFoundException('Character not found')
     }
 
-    const res = await this.characterModel.deleteOne({ id: characterId }).exec()
+    const res = await this.characterModel.deleteOne({ _id: characterId }).exec()
     console.log(`Deleted ${res.deletedCount} character with id:${character.id}`)
 
     return character

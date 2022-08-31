@@ -16,7 +16,7 @@ import { GetEventsQuery } from './dto/get-events-query.dto'
 @Injectable()
 export class EventsService {
   constructor(
-    @InjectModel(Event.name) private eventModel: Model<EventDocument>,
+    @InjectModel(Event.name) private readonly eventModel: Model<EventDocument>,
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<Event> {
@@ -31,6 +31,8 @@ export class EventsService {
         `Scrape result of Event page already exists with id:${check.id}`,
       )
     }
+
+    const newEvent = Object.assign(new Event(), createEventDto)
 
     if (createEventDto.requirements) {
       createEventDto.requirements.forEach(requirement => {
@@ -76,9 +78,9 @@ export class EventsService {
       })
     }
 
-    const newEvent = await this.eventModel.create(createEventDto)
+    const newEventDocument = await this.eventModel.create(createEventDto)
 
-    const res = await newEvent.save()
+    const res = await newEventDocument.save()
     console.log(`Created event with id:${res.id}`)
 
     return res
@@ -104,7 +106,7 @@ export class EventsService {
   }
 
   async findOne(eventId: string): Promise<Event> {
-    const event = await this.eventModel.findOne({ id: eventId }).exec()
+    const event = await this.eventModel.findOne({ _id: eventId }).exec()
     if (!event) {
       throw new NotFoundException('Event not found')
     }
@@ -116,13 +118,13 @@ export class EventsService {
     eventId: string,
     updateEventDto: UpdateEventDto,
   ): Promise<Event> {
-    const event = await this.eventModel.findOne({ id: eventId }).exec()
+    const event = await this.eventModel.findOne({ _id: eventId }).exec()
     if (!event) {
       throw new NotFoundException('Event not found')
     }
 
     const res = await this.eventModel
-      .updateOne({ id: eventId }, updateEventDto)
+      .updateOne({ _id: eventId }, updateEventDto)
       .exec()
     console.log(`Updated ${res.modifiedCount} event with id:${event.id}`)
 
@@ -147,12 +149,14 @@ export class EventsService {
   }
 
   async remove(eventId: string): Promise<Event> {
-    const event = await this.eventModel.findOne({ id: eventId }).exec()
+    console.log(`Attemp to delete event with id:${eventId}`)
+
+    const event = await this.eventModel.findOne({ _id: eventId }).exec()
     if (!event) {
       throw new NotFoundException('Event not found')
     }
 
-    const res = await this.eventModel.deleteOne({ id: eventId }).exec()
+    const res = await this.eventModel.deleteOne({ _id: eventId }).exec()
     console.log(`Deleted ${res.deletedCount} event with id:${event.id}`)
 
     return event

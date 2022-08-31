@@ -45,7 +45,7 @@ export class <%= classify(name) %>Service {
   }
 
   async findOne(<%= singular(name) %>Id: string): Promise<<%= singular(classify(name)) %>> {
-    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ id: <%= singular(name) %>Id }).exec()
+    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ _id: <%= singular(name) %>Id }).exec()
     if (!<%= singular(name) %>) {
       throw new NotFoundException('<%= singular(classify(name)) %> not found')
     }
@@ -57,13 +57,13 @@ export class <%= classify(name) %>Service {
     <%= singular(name) %>Id: string,
     update<%= singular(classify(name)) %>Dto: Update<%= singular(classify(name)) %>Dto,
   ): Promise<<%= singular(classify(name)) %>> {
-    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ id: <%= singular(name) %>Id }).exec()
+    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ _id: <%= singular(name) %>Id }).exec()
     if (!<%= singular(name) %>) {
       throw new NotFoundException('<%= singular(classify(name)) %> not found')
     }
 
     const res = await this.<%= singular(name) %>Model
-      .updateOne({ id: <%= singular(name) %>Id }, update<%= singular(classify(name)) %>Dto)
+      .updateOne({ _id: <%= singular(name) %>Id }, update<%= singular(classify(name)) %>Dto)
       .exec()
     console.log(`Updated ${res.modifiedCount} <%= singular(name) %> with id:${<%= singular(name) %>.id}`)
 
@@ -71,12 +71,12 @@ export class <%= classify(name) %>Service {
   }
 
   async remove(<%= singular(name) %>Id: string): Promise<<%= singular(classify(name)) %>> {
-    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ id: <%= singular(name) %>Id }).exec()
+    const <%= singular(name) %> = await this.<%= singular(name) %>Model.findOne({ _id: <%= singular(name) %>Id }).exec()
     if (!<%= singular(name) %>) {
       throw new NotFoundException('<%= singular(classify(name)) %> not found')
     }
 
-    const res = await this.<%= singular(name) %>Model.deleteOne({ id: <%= singular(name) %>Id }).exec()
+    const res = await this.<%= singular(name) %>Model.deleteOne({ _id: <%= singular(name) %>Id }).exec()
     console.log(`Deleted ${res.deletedCount} <%= singular(name) %> with id:${<%= singular(name) %>.id}`)
 
     return <%= singular(name) %>
