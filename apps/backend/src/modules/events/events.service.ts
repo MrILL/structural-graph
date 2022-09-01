@@ -8,6 +8,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
+import { EventDetailsService } from '../event-details/event-details.service'
+
 import { Event, EventDocument, EventRequirementType } from './event.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
@@ -17,12 +19,15 @@ import { GetEventsQuery } from './dto/get-events-query.dto'
 export class EventsService {
   constructor(
     @InjectModel(Event.name) private readonly eventModel: Model<EventDocument>,
+    private readonly eventDetailsService: EventDetailsService,
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<Event> {
+    const { details, ...createDto } = createEventDto
+
     const check = await this.eventModel
       .findOne({
-        wikiUrl: createEventDto.wikiUrl,
+        wikiUrl: createDto.wikiUrl,
       })
       .exec()
     if (check) {
@@ -34,8 +39,8 @@ export class EventsService {
 
     const newEvent = Object.assign(new Event(), createEventDto)
 
-    if (createEventDto.requirements) {
-      createEventDto.requirements.forEach(requirement => {
+    if (createDto.requirements) {
+      createDto.requirements.forEach(requirement => {
         const { eventType, value, eventId, characterId } = requirement
         switch (requirement.eventType) {
           case EventRequirementType.Text:
@@ -78,7 +83,13 @@ export class EventsService {
       })
     }
 
-    const newEventDocument = await this.eventModel.create(createEventDto)
+    if (details) {
+      const eventDetails = await this.eventDetailsService.create(details)
+
+      newEvent.detailsId = eventDetails.id
+    }
+
+    const newEventDocument = await this.eventModel.create(newEvent)
 
     const res = await newEventDocument.save()
     console.log(`Created event with id:${res.id}`)
@@ -158,6 +169,14 @@ export class EventsService {
 
     const res = await this.eventModel.deleteOne({ _id: eventId }).exec()
     console.log(`Deleted ${res.deletedCount} event with id:${event.id}`)
+
+    /// "cascade"
+
+    if (event.detailsId) {
+      await this.eventDetailsService.remove(event.detailsId)
+    }
+
+    ///
 
     return event
   }

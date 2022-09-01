@@ -37,7 +37,12 @@ export class Event {
   @Prop({ required: true })
   version: string
 
-  ///
+  //////
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'EventEventDetails' })
+  detailsId?: string
+
+  /// TODO remove after migration
 
   @Prop()
   synopsis?: string
@@ -57,7 +62,7 @@ export class Event {
   @Prop({ type: mongoose.Schema.Types.Map, of: String })
   manyText?: Map<string, string>
 
-  ///
+  //////
 
   @Prop()
   location?: string //or actual location page

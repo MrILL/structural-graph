@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 
+import { EventDetailsModule } from '../event-details/event-details.module'
+
 import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
 import { Event, EventSchema } from './event.schema'
@@ -13,6 +15,7 @@ import { Event, EventSchema } from './event.schema'
         schema: EventSchema,
       },
     ]),
+    EventDetailsModule,
   ],
   controllers: [EventsController],
   providers: [EventsService],

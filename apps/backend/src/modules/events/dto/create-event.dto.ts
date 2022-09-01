@@ -9,6 +9,7 @@ import {
 import { Type } from 'class-transformer'
 
 import { Event, EventRequirement } from '../event.schema'
+import { CreateEventDetailsDto } from '../../event-details/dto/create-event-detail.dto'
 
 export class CreateEventDto implements Omit<Event, 'id'> {
   @IsNotEmpty()
@@ -27,20 +28,31 @@ export class CreateEventDto implements Omit<Event, 'id'> {
   ///
 
   @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateEventDetailsDto)
+  details?: CreateEventDetailsDto
+
+  //TODO remove
+  @IsOptional()
   synopsis?: string
 
+  //TODO remove
   @IsOptional()
   choises?: string
 
+  //TODO remove
   @IsOptional()
   criteria?: string
 
+  //TODO remove
   @IsOptional()
   effects?: string
 
+  //TODO remove
   @IsOptional()
   trivia?: string
 
+  //TODO remove
   @IsOptional()
   manyText?: Map<string, string>
 
