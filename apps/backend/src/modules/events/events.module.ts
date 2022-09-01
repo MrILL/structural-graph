@@ -6,6 +6,7 @@ import { EventDetailsModule } from '../event-details/event-details.module'
 import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
 import { Event, EventSchema } from './event.schema'
+import { EventsRepository } from './events.repository'
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { Event, EventSchema } from './event.schema'
     EventDetailsModule,
   ],
   controllers: [EventsController],
-  providers: [EventsService],
+  providers: [EventsService, EventsRepository],
 })
 export class EventsModule {}

@@ -14,22 +14,21 @@ import { Event, EventDocument, EventRequirementType } from './event.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
 import { GetEventsQuery } from './dto/get-events-query.dto'
+import { EventsRepository } from './events.repository'
 
 @Injectable()
 export class EventsService {
   constructor(
-    @InjectModel(Event.name) private readonly eventModel: Model<EventDocument>,
+    private readonly eventsRepository: EventsRepository,
     private readonly eventDetailsService: EventDetailsService,
   ) {}
 
   async create(createEventDto: CreateEventDto): Promise<Event> {
     const { details, ...createDto } = createEventDto
 
-    const check = await this.eventModel
-      .findOne({
-        wikiUrl: createDto.wikiUrl,
-      })
-      .exec()
+    const check = await this.eventsRepository.findOneByWikiUrl(
+      createDto.wikiUrl,
+    )
     if (check) {
       console.log(`Id of already existed result ${check.id}`)
       throw new ConflictException(
@@ -89,26 +88,14 @@ export class EventsService {
       newEvent.detailsId = eventDetails.id
     }
 
-    const newEventDocument = await this.eventModel.create(newEvent)
-
-    const res = await newEventDocument.save()
+    const res = await this.eventsRepository.create(newEvent)
     console.log(`Created event with id:${res.id}`)
 
     return res
   }
 
   async findAll(queries: GetEventsQuery): Promise<Event[]> {
-    const dbQuery = this.eventModel.find()
-
-    if (queries.title) {
-      dbQuery.where('title', { $regex: queries.title })
-    }
-
-    if (queries.wikiUrl) {
-      dbQuery.where('wikiUrl', queries.wikiUrl)
-    }
-
-    const events = await dbQuery.exec()
+    const events = await this.eventsRepository.findAll(queries)
     if (!events || !events.length) {
       throw new NotFoundException('Events not found')
     }
@@ -117,7 +104,7 @@ export class EventsService {
   }
 
   async findOne(eventId: string): Promise<Event> {
-    const event = await this.eventModel.findOne({ _id: eventId }).exec()
+    const event = await this.eventsRepository.findOne(eventId)
     if (!event) {
       throw new NotFoundException('Event not found')
     }
@@ -129,21 +116,19 @@ export class EventsService {
     eventId: string,
     updateEventDto: UpdateEventDto,
   ): Promise<Event> {
-    const event = await this.eventModel.findOne({ _id: eventId }).exec()
+    const event = await this.eventsRepository.findOne(eventId)
     if (!event) {
       throw new NotFoundException('Event not found')
     }
 
-    const res = await this.eventModel
-      .updateOne({ _id: eventId }, updateEventDto)
-      .exec()
-    console.log(`Updated ${res.modifiedCount} event with id:${event.id}`)
+    const res = await this.eventsRepository.update(eventId, updateEventDto)
+    console.log(`Updated event with id:${event.id}`)
 
-    return event
+    return res
   }
 
   async removeAll(): Promise<Event[]> {
-    const events = await this.eventModel.find().exec()
+    const events = await this.eventsRepository.findAll()
     if (!events || !events.length) {
       throw new NotFoundException('Events not found')
     }
@@ -162,12 +147,12 @@ export class EventsService {
   async remove(eventId: string): Promise<Event> {
     console.log(`Attemp to delete event with id:${eventId}`)
 
-    const event = await this.eventModel.findOne({ _id: eventId }).exec()
+    const event = await this.eventsRepository.findOne(eventId)
     if (!event) {
       throw new NotFoundException('Event not found')
     }
 
-    const res = await this.eventModel.deleteOne({ _id: eventId }).exec()
+    const res = await this.eventsRepository.remove(eventId)
     console.log(`Deleted ${res.deletedCount} event with id:${event.id}`)
 
     /// "cascade"
