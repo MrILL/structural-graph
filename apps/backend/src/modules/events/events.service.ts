@@ -5,12 +5,10 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 
 import { EventDetailsService } from '../event-details/event-details.service'
 
-import { Event, EventDocument, EventRequirementType } from './event.schema'
+import { Event, EventRequirementType } from './event.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
 import { GetEventsQuery } from './dto/get-events-query.dto'

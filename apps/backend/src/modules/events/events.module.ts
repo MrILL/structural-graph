@@ -7,9 +7,11 @@ import { EventsController } from './events.controller'
 import { EventsService } from './events.service'
 import { Event, EventSchema } from './event.schema'
 import { EventsRepository } from './events.repository'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature(),
     MongooseModule.forFeature([
       {
         name: Event.name,
