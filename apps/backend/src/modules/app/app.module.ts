@@ -18,9 +18,9 @@ import { AppService } from './app.service'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        type: await configService.get('DB_TYPE'),
+        type: 'mongodb',
         url: await configService.get('DB_URL'),
-        entities: [path.join(process.cwd(), '**/**.entity{.ts,.js}')],
+        entities: [path.join(process.cwd(), 'src', '**/**.entity{.ts,.js}')],
         synchronize: configService.get('DB_SYNC') === 'true',
       }),
     }),
@@ -28,7 +28,9 @@ import { AppService } from './app.service'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        return { uri: await configService.get('DB_URL') }
+        return {
+          uri: await configService.get('DB_URL'),
+        }
       },
     }),
     EventsModule,

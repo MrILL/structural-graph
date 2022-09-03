@@ -1,6 +1,4 @@
-import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm'
-
-import { EVENT_DETAILS_ID_LENGTH, EVENT_ID_LENGTH } from '@sg/constants'
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 
 export enum EventRequirementType {
   Text = 'text',
@@ -10,24 +8,28 @@ export enum EventRequirementType {
 }
 
 export class EventRequirement {
+  @Column()
   eventType: EventRequirementType
 
+  @Column()
   value?: string
 
+  @Column()
   characterId?: string
 
+  @Column()
   eventId?: string
 }
 
 @Entity()
 export class Event {
   @ObjectIdColumn()
-  id: string
+  id: ObjectID
 
-  @Column({ unique: true })
+  @Column()
   title: string
 
-  @Column({ unique: true })
+  @Column()
   wikiUrl: string
 
   @Column()
@@ -38,12 +40,11 @@ export class Event {
 
   //////
 
-  @Column({
-    length: EVENT_DETAILS_ID_LENGTH,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'EventEventDetails',
-  })
-  detailsId?: string
+  /**
+   * reference to EventDetail
+   */
+  @Column()
+  detailsId?: ObjectID
 
   /// TODO remove after migration
 
@@ -62,7 +63,7 @@ export class Event {
   @Column()
   trivia?: string
 
-  @Column({ type: mongoose.Schema.Types.Map, of: String })
+  @Column()
   manyText?: Map<string, string>
 
   //////
@@ -71,41 +72,22 @@ export class Event {
   location?: string //or actual location page
 
   //TODO replace with reference at separate table
-  @Column(
-    raw({
-      type: [
-        {
-          eventType: {
-            required: true,
-            type: String,
-            enum: EventRequirementType,
-          },
-          value: {
-            type: mongoose.Schema.Types.String,
-          },
-          characterId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Character',
-          },
-          eventId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Event',
-          },
-        },
-      ],
-    }),
-  )
+  @Column()
   requirements?: EventRequirement[] //can be text
 
-  @Column({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Character' }],
-  })
+  @Column()
   activeCharacterIds?: string[]
 
-  @Column({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
+  /**
+   * reference to Event
+   */
+  @Column()
   prevEventId?: string
 
-  @Column({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
+  /**
+   * reference to Event
+   */
+  @Column()
   nextEventId?: string
 
   ///
@@ -114,6 +96,6 @@ export class Event {
   imgUrl?: string
 }
 
-export type EventDocument = Event & Document
+// export type EventDocument = Event & Document
 
-export const EventSchema = BaseSchemaFactory.createForClass(Event)
+// export const EventSchema = BaseSchemaFactory.createForClass(Event)
