@@ -40,3 +40,14 @@ nx-frontend:
 
 nx-backend:
 	nx serve backend
+
+### migrations
+
+override MIGRATE_PATH = .\node_modules\.bin\migrate
+override MIGRATE_OPTIONS = --migrations-dir apps/backend/src/migrations
+
+migration-create:
+	${MIGRATE_PATH} create ${MIGRATE_OPTIONS} ${name}
+
+migration-up:
+	${MIGRATE_PATH} up ${MIGRATE_OPTIONS} ${name}
