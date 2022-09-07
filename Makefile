@@ -44,10 +44,14 @@ nx-backend:
 ### migrations
 
 override MIGRATE_PATH = .\node_modules\.bin\migrate
-override MIGRATE_OPTIONS = --migrations-dir apps/backend/src/migrations
+override MIGRATE_OPTIONS = -c apps/backend --migrations-dir src/migrations
+	
 
 migration-create:
 	${MIGRATE_PATH} create ${MIGRATE_OPTIONS} ${name}
 
 migration-up:
 	${MIGRATE_PATH} up ${MIGRATE_OPTIONS} ${name}
+
+migration-down:
+	${MIGRATE_PATH} down ${MIGRATE_OPTIONS} ${name}
