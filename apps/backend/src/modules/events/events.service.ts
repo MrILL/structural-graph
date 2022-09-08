@@ -80,11 +80,9 @@ export class EventsService {
       })
     }
 
-    if (details) {
-      const eventDetails = await this.eventDetailsService.create(details)
+    const eventDetails = await this.eventDetailsService.create(details ?? {})
 
-      newEvent.detailsId = eventDetails.id
-    }
+    newEvent.detailsId = eventDetails.id
 
     const res = await this.eventsRepository.create(newEvent)
     console.log(`Created event with id:${res.id}`)
