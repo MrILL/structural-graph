@@ -7,33 +7,28 @@ dotenv.config()
 const DB_URL = process.env['DB_URL']
 
 module.exports.up = function (next) {
-  console.log(DB_URL)
-  console.log(process.cwd())
   mongoose.connect(DB_URL)
 
-  const eventModel = mongoose.model('Event', new mongoose.Schema({}), 'events')
+  const eventModel = mongoose.model(
+    'Event',
+    new mongoose.Schema({}, { strict: false }),
+    'events',
+  )
   const eventDetailsModel = mongoose.model(
     'EventDetail',
-    new mongoose.Schema({}),
+    new mongoose.Schema({}, { strict: false }),
     'eventdetails',
   )
 
-  //TODO get all events
   eventModel
     .find()
     .exec()
     .then(events => {
       return Promise.all(
         events.map(async event => {
-          // console.log(event)
-          //TODO from all event extract:
-          // 'synopsis', 'choises', 'criteria', 'effects', 'trivia', 'manyText'
-          // fields
-
           const { synopsis, choises, criteria, effects, trivia, manyText } =
             event
 
-          // create new EventDetails from this
           const newEventDetail = await eventDetailsModel.create({
             synopsis,
             choises,
@@ -43,32 +38,19 @@ module.exports.up = function (next) {
             manyText,
           })
 
-          const newEventDetailRes = await newEventDetail.save()
-          console.log('details: ', newEventDetail)
-          console.log('details res: ', newEventDetailRes)
+          ;[
+            'synopsis',
+            'choises',
+            'criteria',
+            'effects',
+            'trivia',
+            'manyText',
+          ].forEach(field => {
+            event.set(field, undefined)
+          })
 
-          // use Id of new EventDetails to add detailsId ref to event
-
-          const res = await eventModel.updateOne(
-            { _id: event._id },
-            {
-              $unset: {
-                synopsis: '',
-                choises: '',
-                criteria: '',
-                effects: '',
-                trivia: '',
-                manyText: '',
-              },
-              $set: {
-                detailsId: newEventDetail._id,
-              },
-            },
-          )
-          // const res = await eventModel.updateOne({ _id: event._id }, newEvent)
-          console.log(res)
-
-          throw new Error()
+          event.set('detailsId', newEventDetail._id)
+          await event.save()
         }),
       )
     })
@@ -78,5 +60,52 @@ module.exports.up = function (next) {
 }
 
 module.exports.down = function (next) {
-  next()
+  mongoose.connect(DB_URL)
+
+  const eventModel = mongoose.model(
+    'Event',
+    new mongoose.Schema({}, { strict: false }),
+    'events',
+  )
+  const eventDetailsModel = mongoose.model(
+    'EventDetail',
+    new mongoose.Schema({}, { strict: false }),
+    'eventdetails',
+  )
+
+  eventModel
+    .find()
+    .exec()
+    .then(events => {
+      return Promise.all(
+        events.map(async event => {
+          const eventDetails = await eventDetailsModel
+            .findOne({
+              _id: event.detailsId,
+            })
+            .exec()
+          if (!eventDetails) {
+            return
+          }
+
+          ;[
+            'synopsis',
+            'choises',
+            'criteria',
+            'effects',
+            'trivia',
+            'manyText',
+          ].forEach(field => {
+            event.set(field, eventDetails[field])
+          })
+          event.set('detailsId', undefined)
+          event.save()
+
+          await eventDetailsModel.findByIdAndRemove(eventDetails.id)
+        }),
+      )
+    })
+    .then(() => {
+      return next()
+    })
 }
