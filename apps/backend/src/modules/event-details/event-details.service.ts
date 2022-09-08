@@ -19,11 +19,9 @@ export class EventDetailsService {
     const newEventDetail = await this.eventDetailModel.create(
       createEventDetailDto,
     )
+    console.log(`Created eventEetails with id:${newEventDetail.id}`)
 
-    const res = await newEventDetail.save()
-    console.log(`Created eventEetails with id:${res.id}`)
-
-    return res
+    return newEventDetail
   }
 
   async findAll(): Promise<EventDetails[]> {

@@ -28,11 +28,9 @@ export class CharactersService {
     }
 
     const newCharacter = await this.characterModel.create(createCharacterDto)
+    console.log(`Created character with id:${newCharacter.id}`)
 
-    const res = await newCharacter.save()
-    console.log(`Created character with id:${res.id}`)
-
-    return res
+    return newCharacter
   }
 
   async findAll(queries: GetCharactersQuery): Promise<Character[]> {
