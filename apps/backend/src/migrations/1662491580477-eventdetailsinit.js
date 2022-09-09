@@ -6,19 +6,37 @@ dotenv.config()
 
 const DB_URL = process.env['DB_URL']
 
-module.exports.up = function (next) {
-  mongoose.connect(DB_URL)
+const setupConnection = () => mongoose.connect(DB_URL)
 
-  const eventModel = mongoose.model(
-    'Event',
-    new mongoose.Schema({}, { strict: false }),
-    'events',
-  )
-  const eventDetailsModel = mongoose.model(
-    'EventDetail',
-    new mongoose.Schema({}, { strict: false }),
-    'eventdetails',
-  )
+const setupModels = () => {
+  return {
+    eventModel: mongoose.model(
+      'Event',
+      new mongoose.Schema({}, { strict: false }),
+      'events',
+    ),
+    eventDetailsModel: mongoose.model(
+      'EventDetail',
+      new mongoose.Schema({}, { strict: false }),
+      'eventdetails',
+    ),
+  }
+}
+
+///
+
+const affectedFields = [
+  'synopsis',
+  'choises',
+  'criteria',
+  'effects',
+  'trivia',
+  'manyText',
+]
+
+module.exports.up = function (next) {
+  setupConnection()
+  const { eventModel, eventDetailsModel } = setupModels()
 
   eventModel
     .find()
@@ -26,26 +44,14 @@ module.exports.up = function (next) {
     .then(events => {
       return Promise.all(
         events.map(async event => {
-          const { synopsis, choises, criteria, effects, trivia, manyText } =
-            event
+          const newEventDetailPayload = Object.fromEntries(
+            affectedFields.map(field => [field, event[field]]),
+          )
+          const newEventDetail = await eventDetailsModel.create(
+            newEventDetailPayload,
+          )
 
-          const newEventDetail = await eventDetailsModel.create({
-            synopsis,
-            choises,
-            criteria,
-            effects,
-            trivia,
-            manyText,
-          })
-
-          ;[
-            'synopsis',
-            'choises',
-            'criteria',
-            'effects',
-            'trivia',
-            'manyText',
-          ].forEach(field => {
+          affectedFields.forEach(field => {
             event.set(field, undefined)
           })
 
@@ -60,18 +66,8 @@ module.exports.up = function (next) {
 }
 
 module.exports.down = function (next) {
-  mongoose.connect(DB_URL)
-
-  const eventModel = mongoose.model(
-    'Event',
-    new mongoose.Schema({}, { strict: false }),
-    'events',
-  )
-  const eventDetailsModel = mongoose.model(
-    'EventDetail',
-    new mongoose.Schema({}, { strict: false }),
-    'eventdetails',
-  )
+  setupConnection()
+  const { eventModel, eventDetailsModel } = setupModels()
 
   eventModel
     .find()
@@ -88,14 +84,7 @@ module.exports.down = function (next) {
             return
           }
 
-          ;[
-            'synopsis',
-            'choises',
-            'criteria',
-            'effects',
-            'trivia',
-            'manyText',
-          ].forEach(field => {
+          affectedFields.forEach(field => {
             event.set(field, eventDetails[field])
           })
           event.set('detailsId', undefined)
