@@ -24,9 +24,23 @@ export function EventCard({
             }
           : {}
       }
+      onClick={() => {
+        if (selected) {
+          // alert('Clicked eventCard')
+        }
+      }}
     >
       <Handle type="target" position={Position.Top} />
-      <Image src={data.imgUrl ?? imagePlaceholder} alt="new" />
+      <Image
+        onMouseDown={() => {
+          console.log('mouse down to' + data.id)
+        }}
+        onMouseUp={() => {
+          console.log('mouse up to' + data.id)
+        }}
+        src={data.imgUrl ?? imagePlaceholder}
+        alt="new"
+      />
       <EventTypeWrapper>{data.type}</EventTypeWrapper>
       <VersinWrapper>{`v${data.version}`}</VersinWrapper>
       <TitleWrapper>{data.title}</TitleWrapper>
