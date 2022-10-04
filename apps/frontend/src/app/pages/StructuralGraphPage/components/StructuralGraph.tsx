@@ -4,6 +4,7 @@ import ReactFlow, {
   Edge,
   Node,
   NodeChange,
+  NodeMouseHandler,
 } from 'react-flow-renderer'
 
 import { GameEvent } from '@sg/types'
@@ -11,10 +12,14 @@ import { GameEvent } from '@sg/types'
 import { EventCard } from './EventCard'
 import { CharacterDivider } from './CharacterDivider'
 import { GameEventsBuilder } from '../lib/GameEventsBuilder'
-import { CustomNode } from '../types'
+import { CardNode, CustomNode } from '../types'
 
 const EDGE_SELECTED_INCOMING_COLOR = '#9c9998'
 const EDGE_SELECTED_OUTCOMING_COLOR = '#d9765d'
+
+function customApplyNodeChanges(chandes: any[], nodes: any[]): any[] {
+  return []
+}
 
 function customApplyEdgeChanges(changes: any[], edges: any[]): any[] {
   let newEdges = edges
@@ -107,17 +112,54 @@ export function StructuralGraph({
     [],
   )
 
+  const onNodeDoubleClickHandler = React.useCallback(
+    (mouseEvent: React.MouseEvent, cardNode: CardNode) => {
+      console.log(cardNode)
+      const cardId = cardNode.data.id
+      console.log(cardId)
+
+      //TODO show modular window
+    },
+    [],
+  )
+
   return (
-    <ReactFlow
+    <div
       style={{
-        backgroundColor: 'pink',
+        position: 'relative',
         width: '100%',
+        height: '100%',
       }}
-      nodeTypes={nodeTypes}
-      nodes={nodes as any}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      minZoom={0.1}
-    />
+    >
+      <ReactFlow
+        style={{
+          backgroundColor: 'pink',
+          width: '100%',
+        }}
+        nodeTypes={nodeTypes}
+        nodes={nodes as any}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onNodeDoubleClick={onNodeDoubleClickHandler as NodeMouseHandler}
+        minZoom={0.1}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#393939',
+          textAlign: 'center',
+          fontSize: '24',
+
+          zIndex: 9,
+        }}
+      >
+        <h2>TODO</h2>
+      </div>
+    </div>
   )
 }
