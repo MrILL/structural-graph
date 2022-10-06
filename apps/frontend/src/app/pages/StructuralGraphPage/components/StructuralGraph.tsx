@@ -11,15 +11,12 @@ import { GameEvent } from '@sg/types'
 
 import { EventCard } from './EventCard'
 import { CharacterDivider } from './CharacterDivider'
+import { ModalInfo } from './ModalInfo'
 import { GameEventsBuilder } from '../lib/GameEventsBuilder'
 import { CardNode, CustomNode } from '../types'
 
 const EDGE_SELECTED_INCOMING_COLOR = '#9c9998'
 const EDGE_SELECTED_OUTCOMING_COLOR = '#d9765d'
-
-function customApplyNodeChanges(chandes: any[], nodes: any[]): any[] {
-  return []
-}
 
 function customApplyEdgeChanges(changes: any[], edges: any[]): any[] {
   let newEdges = edges
@@ -70,8 +67,6 @@ export function StructuralGraph({
 }: {
   serverEvents: GameEvent[]
 }) {
-  // const [nodes, setNodes] = React.useState<Node[]>([])
-  // const [edges, setEdges] = React.useState<Edge[]>([])
   const [state, setState] = React.useState<{
     nodes: CustomNode[]
     edges: Edge[]
@@ -80,6 +75,15 @@ export function StructuralGraph({
     edges: [],
   })
   const { nodes, edges } = state
+
+  const [modal, setModal] = React.useState<GameEvent | null>(null)
+
+  ///
+
+  const nodeTypes = React.useMemo(
+    () => ({ card: EventCard, characterDivider: CharacterDivider }),
+    [],
+  )
 
   React.useEffect(() => {
     const builder = new GameEventsBuilder(serverEvents)
@@ -95,33 +99,18 @@ export function StructuralGraph({
         nodes: applyNodeChanges(changes, nodes as any),
         edges: customApplyEdgeChanges(changes, edges),
       })
-      // setEdges(edgs => customApplyEdgeChanges(changes, edgs))
-      // setNodes(nds => applyNodeChanges(changes, nds))
     },
-    [
-      state,
-      // edges,
-      // nodes,
-      // setNodes,
-      // setEdges
-    ],
+    [state],
   )
 
-  const nodeTypes = React.useMemo(
-    () => ({ card: EventCard, characterDivider: CharacterDivider }),
-    [],
-  )
-
-  const onNodeDoubleClickHandler = React.useCallback(
+  const onNodeDoubleClick = React.useCallback(
     (mouseEvent: React.MouseEvent, cardNode: CardNode) => {
-      console.log(cardNode)
-      const cardId = cardNode.data.id
-      console.log(cardId)
-
-      //TODO show modular window
+      setModal(cardNode.data)
     },
-    [],
+    [setModal],
   )
+
+  ///
 
   return (
     <div
@@ -137,29 +126,14 @@ export function StructuralGraph({
           width: '100%',
         }}
         nodeTypes={nodeTypes}
-        nodes={nodes as any}
+        nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
-        onNodeDoubleClick={onNodeDoubleClickHandler as NodeMouseHandler}
+        onNodeDoubleClick={onNodeDoubleClick as NodeMouseHandler}
         minZoom={0.1}
       />
 
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#393939',
-          textAlign: 'center',
-          fontSize: '24',
-
-          zIndex: 9,
-        }}
-      >
-        <h2>TODO</h2>
-      </div>
+      {modal && <ModalInfo data={modal} closeModal={() => setModal(null)} />}
     </div>
   )
 }
