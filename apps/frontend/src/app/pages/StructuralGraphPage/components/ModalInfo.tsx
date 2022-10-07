@@ -28,6 +28,24 @@ export function ModalInfo({
       .catch(e => console.log(e))
   }, [])
 
+  let detailsRender
+  if (eventDetails) {
+    const { _id, id, __v, ...details } = eventDetails as any
+
+    detailsRender = Object.entries(details).map(([key, value]) => {
+      return (
+        <>
+          <ContentHeader>
+            {key.charAt(0).toUpperCase() + key.slice(1)}
+          </ContentHeader>
+          <ContentContainer
+            dangerouslySetInnerHTML={{ __html: value as string }}
+          />
+        </>
+      )
+    })
+  }
+
   return (
     <Wrapper onClick={() => closeModal()}>
       <ModalContainer onClick={event => event.stopPropagation()}>
@@ -36,12 +54,13 @@ export function ModalInfo({
         </ExternalLinkContainer>
         <Title>{data.title}</Title>
         <MainContentContainer>
-          <MainPosterContainer>
-            <MainPosterImage src={data.imgUrl} alt="poster" />
+          <PosterContainer>
+            <PosterImage src={data.imgUrl} alt="poster" />
             <VersionWrapper>{`v${data.version}`}</VersionWrapper>
             <TypeWrapper>{data.type}</TypeWrapper>
-          </MainPosterContainer>
+          </PosterContainer>
         </MainContentContainer>
+        {detailsRender}
       </ModalContainer>
     </Wrapper>
   )
@@ -65,7 +84,9 @@ const Wrapper = styled.div`
 const ModalContainer = styled.div`
   position: relative;
   min-width: 50%;
+  max-width: 80%;
   min-height: 25%;
+  max-height: 80%;
   background-color: white;
   padding: 16px;
   // borderRadius: 32px;
@@ -84,7 +105,7 @@ const Title = styled.h3`
 
 const MainContentContainer = styled.div``
 
-const MainPosterContainer = styled.div`
+const PosterContainer = styled.div`
   position: relative;
   width: 240px;
   height: 180px;
@@ -93,7 +114,7 @@ const MainPosterContainer = styled.div`
   overflow: hidden;
 `
 
-const MainPosterImage = styled.img`
+const PosterImage = styled.img`
   position: absolute;
   width: inherit;
   height: inherit;
@@ -132,3 +153,12 @@ const VersionWrapper = styled(TextHolder)`
   background: rgba(0, 0, 0, 0.25);
   border-radius: 0px 32px 0px 28px;
 `
+
+const ContentHeader = styled.h5`
+  font-size: 20px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+  margin-left: 16px;
+`
+
+const ContentContainer = styled.span``
